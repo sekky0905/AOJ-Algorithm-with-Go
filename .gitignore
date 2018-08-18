@@ -46,3 +46,8 @@ Temporary Items
 euclidean_algorithm/euclidean_algorithm
 insertion_sort/inserion_sort
 prime_numbers/prime_numbers
+
+# 拡張子なし
+*
+!*/
+!*.*
