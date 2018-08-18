@@ -42,7 +42,8 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-.idea/
-euclidean_algorithm/euclidean_algorithm
-insertion_sort/inserion_sort
-prime_numbers/prime_numbers
+.idea
+
+*
+!*/
+!*.*
