@@ -25,21 +25,21 @@ func getTarget() (target []int, length int) {
 
 // BubbleSort は、バブルソートを行い数列を昇順に整列する
 // 整列した数列及び、要素の交換回数を返す
-func BubbleSort(numSlice []int, length int) ([]int, int) {
+func BubbleSort(target []int, length int) ([]int, int) {
 	isThereRightNext := true
 	count := 0
 	for isThereRightNext {
 		// 交換の前にfalseにしておくことで、交換が行われなかった場合には上のループが終了することになる
 		isThereRightNext = false
 		for i := length - 1; i > 0; i-- {
-			if numSlice[i] < numSlice[i-1] {
-				tmp := numSlice[i]
-				numSlice[i] = numSlice[i-1]
-				numSlice[i-1] = tmp
+			if target[i] < target[i-1] {
+				tmp := target[i]
+				target[i] = target[i-1]
+				target[i-1] = tmp
 				count++
 				isThereRightNext = true
 			}
 		}
 	}
-	return numSlice, count
+	return target, count
 }
