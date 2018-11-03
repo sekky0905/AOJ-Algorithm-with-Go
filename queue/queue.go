@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	maxQueue = 100000
+	maxQueue = 100005
 	sep      = " "
 )
 
@@ -159,7 +159,7 @@ func (q *Queue) EnQueue(el *Process) error {
 	}
 
 	q.list[q.tail] = el
-	if q.head+1 == maxQueue {
+	if q.tail+1 == maxQueue {
 		q.tail = 0 // 先頭に戻す
 		return nil
 	}
