@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"errors"
 	"fmt"
 	"os"
@@ -11,7 +12,7 @@ import (
 
 const (
 	insertCommand      = "insert"
-	deleteCommand = "delete"
+	deleteCommand      = "delete"
 	deleteFirstCommand = "deleteFirst"
 	deleteLastCommand  = "deleteLast"
 )
@@ -137,13 +138,19 @@ func (dll *DoublyLinkedList) ExecuteCommand(inputCommand string) error {
 
 // Print は、Nodeを全て表示する。
 func (dll *DoublyLinkedList) Print() {
+	buf := bytes.Buffer{}
 	// 番兵を抜かした最初のNode
 	now := dll.dummy.Next
 
 	for now != dll.dummy {
-		fmt.Printf("%d ", now.Data)
+		buf.WriteString(strconv.Itoa(now.Data))
+		if now.Next == dll.dummy {
+			break
+		}
+		buf.WriteString(" ")
 		now = now.Next
 	}
+	fmt.Println(buf.String())
 }
 
 // getTarget は、ターゲットとなる操作のSliceを返す。
@@ -165,11 +172,25 @@ func getTarget() []string {
 }
 
 func main() {
-	targets := getTarget()
+	// 最初の数字
+	sc := bufio.NewScanner(os.Stdin)
+	sc.Scan()
+	str := sc.Text()
+	n, _ := strconv.Atoi(str)
+
 	dll := NewDoublyLinkedList()
 
-	for _, target := range targets {
-		dll.ExecuteCommand(target)
+	i := 1
+
+	for {
+		sc.Scan()
+		a := sc.Text()
+		dll.ExecuteCommand(a)
+
+		if i == n {
+			break
+		}
+		i++
 	}
 
 	dll.Print()
