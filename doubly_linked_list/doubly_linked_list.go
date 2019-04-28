@@ -10,10 +10,10 @@ import (
 )
 
 const (
-	insert      = "insert"
-	delete      = "delete"
-	deleteFirst = "deleteFirst"
-	deleteLast  = "deleteLast"
+	insertCommand      = "insert"
+	deleteCommand = "delete"
+	deleteFirstCommand = "deleteFirst"
+	deleteLastCommand  = "deleteLast"
 )
 
 // Node は、双方向連結リストの各要素を表す。
@@ -110,24 +110,24 @@ func (dll *DoublyLinkedList) ExecuteCommand(inputCommand string) error {
 	command := s[0]
 
 	switch command {
-	case insert:
+	case insertCommand:
 		num, err := strconv.Atoi(s[1])
 		if err != nil {
 			return err
 		}
 		dll.Insert(num)
 		return nil
-	case delete:
+	case deleteCommand:
 		num, err := strconv.Atoi(s[1])
 		if err != nil {
 			return err
 		}
 		dll.Delete(num)
 		return nil
-	case deleteFirst:
+	case deleteFirstCommand:
 		dll.DeleteFirst()
 		return nil
-	case deleteLast:
+	case deleteLastCommand:
 		dll.DeleteLast()
 		return nil
 	default:
