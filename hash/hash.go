@@ -125,5 +125,5 @@ func main() {
 			}
 		}
 	}
-	fmt.Println(strings.TrimRight(buf.String(), "\n"))
+	fmt.Print(buf.String())
 }
