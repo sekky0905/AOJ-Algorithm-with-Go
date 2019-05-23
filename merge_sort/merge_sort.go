@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"math"
 	"os"
@@ -62,6 +63,7 @@ func mergeSort(list []int, left, right int) {
 }
 
 var sc = bufio.NewScanner(os.Stdin)
+var buf bytes.Buffer
 
 func main() {
 	sc.Split(bufio.ScanWords)
@@ -76,12 +78,13 @@ func main() {
 
 	for i, v := range list {
 		if i == n-1 {
-			fmt.Println(v)
+			buf.WriteString(fmt.Sprintf("%d", v))
 		} else {
-			fmt.Printf("%d ", v)
+			buf.WriteString(fmt.Sprintf("%d ", v))
 		}
 	}
 
+	fmt.Println(buf.String())
 	fmt.Println(counter)
 }
 
