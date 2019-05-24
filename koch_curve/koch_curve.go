@@ -37,8 +37,8 @@ func calcKochCurve(n int, p1, p2 *node) {
 
 	// 頂点
 	u := &node{
-		x: (t.x-s.x)*math.Cos(theta) - (t.y-s.y)*math.Sin(theta) + s.x,
-		y: (t.x-s.x)*math.Sin(theta) - (t.y-s.y)*math.Cos(theta) + s.y,
+		x: s.x + (t.x-s.x)*math.Cos(theta) - (t.y-s.y)*math.Sin(theta),
+		y: s.y + (t.x-s.x)*math.Sin(theta) + (t.y-s.y)*math.Cos(theta),
 	}
 
 	calcKochCurve(n-1, p1, s)
