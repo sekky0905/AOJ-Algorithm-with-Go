@@ -44,17 +44,15 @@ func main() {
 	}
 
 	r := n - 1
-	rv := list[r]
-	partition(list, 0, r)
+	q := partition(list, 0, r)
 
 	for i, v := range list {
-		if v == rv {
+		if i == q {
 			fmt.Printf("[%d] ", v)
-		} else if i == len(list) {
+		} else if i == r {
 			fmt.Println(v)
 		} else {
 			fmt.Printf("%d ", v)
 		}
-
 	}
 }
