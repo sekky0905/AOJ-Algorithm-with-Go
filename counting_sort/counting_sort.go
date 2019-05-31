@@ -10,16 +10,16 @@ import (
 
 func countingSort(a []int, n int) []int {
 	// 0がn個存在するsliceを生成する
-	c := make([]int, n, n)
+	c := make([]int, 10001)
 
-	for j := 1; j < n; j++ {
+	for j := 0; j < n; j++ {
 		// aの数列のj番目に入ってる数字 = xとする
 		// c[x]を++する
 		// こうすることで、c[x]にxがaに存在する個数をカウントしていく
 		c[a[j]]++
 	}
 
-	for i := 1; i < n; i++ {
+	for i := 1; i < 10000; i++ {
 		// c[i]にi以下の出現個数の累計数を記録する
 		c[i] = c[i] + c[i-1]
 	}
@@ -27,8 +27,8 @@ func countingSort(a []int, n int) []int {
 	// 整列後の数列の出力先
 	b := make([]int, n, n)
 
-	for j := n; j > 1; j-- {
-		b[c[a[j]]] = a[j]
+	for j := n - 1; j >= 0; j-- {
+		b[c[a[j]]-1] = a[j]
 		c[a[j]]-- // a[j]番目のcountの累計個数を減らす
 	}
 
@@ -62,7 +62,7 @@ func main() {
 
 	for i, v := range b {
 		if i == len(b)-1 {
-			buf.WriteString(fmt.Sprintf("%d\n", v))
+			buf.WriteString(strconv.Itoa(v))
 		} else {
 			buf.WriteString(fmt.Sprintf("%d ", v))
 		}
