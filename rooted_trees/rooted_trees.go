@@ -26,7 +26,7 @@ func setDepth(nodes []*node, currentNodeID, depth int) {
 	}
 }
 
-func bufferingNodeInfo(node *node, buf bytes.Buffer) {
+func bufferingNodeInfo(node *node, buf *bytes.Buffer) {
 	nodeType := "leaf"
 	if node.parent == -1 {
 		nodeType = "root"
@@ -35,7 +35,7 @@ func bufferingNodeInfo(node *node, buf bytes.Buffer) {
 	}
 
 	childStr := strings.Replace(fmt.Sprintf("%v", node.children), " ", ", ", -1)
-	buf.WriteString(fmt.Sprintf("node %d: parent = %d, depth = %d, %s, [%s]", node.id, node.parent, node.depth, nodeType, childStr))
+	buf.WriteString(fmt.Sprintf("node %d: parent = %d, depth = %d, %s, %s\n", node.id, node.parent, node.depth, nodeType, childStr))
 }
 
 var sc = bufio.NewScanner(os.Stdin)
@@ -72,8 +72,6 @@ func main() {
 		row := scanToStr()
 		info := strings.Split(row, " ")
 
-		fmt.Printf("=>%+v", info)
-
 		id, err := strconv.Atoi(info[idIndex])
 		if err != nil {
 			panic(err)
@@ -101,10 +99,20 @@ func main() {
 		previousID = id
 	}
 
-	setDepth(tree, 0, 0)
+	root := -1
+	for i, node := range tree {
+		if node.parent == -1 {
+			root = i
+			break
+		}
+	}
 
-	buf := bytes.Buffer{}
+	setDepth(tree, root, 0)
+
+	buf := &bytes.Buffer{}
 	for _, node := range tree {
 		bufferingNodeInfo(node, buf)
 	}
+
+	fmt.Println(buf.String())
 }
