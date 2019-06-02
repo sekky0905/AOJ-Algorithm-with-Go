@@ -99,14 +99,7 @@ func main() {
 		previousID = id
 	}
 
-	root := -1
-	for i, node := range tree {
-		if node.parent == -1 {
-			root = i
-			break
-		}
-	}
-
+	root := 0
 	setDepth(tree, root, 0)
 
 	buf := &bytes.Buffer{}
