@@ -2,15 +2,19 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"math"
 	"os"
 	"strconv"
 )
 
 // merge は、マージを行う。
-func merge(list []int, left, mid, right int) {
+func merge(list []int, left, mid, right int) int {
 	n1 := mid - left
 	n2 := right - mid
+
+	// 反転数のカウントを保存
+	counter := 0
 
 	lLen, rLen := n1+1, n2+1
 	leftList, rightList := make([]int, lLen, lLen), make([]int, rLen, rLen)
@@ -41,20 +45,24 @@ func merge(list []int, left, mid, right int) {
 		} else {
 			list[k] = rightList[j]
 			j = j + 1
+			counter += n1 - i
 		}
 	}
+	return counter
 }
 
 // mergeSort は、メージソートを行う。
-func mergeSort(list []int, left, right int) {
+func mergeSort(list []int, left, right int) int {
+	counter := 0
 	if left+1 < right {
 		mid := (left + right) / 2
 		// 左側の整列
-		mergeSort(list, left, mid)
+		counter += mergeSort(list, left, mid)
 		// 右側の整列
-		mergeSort(list, mid, right)
-		merge(list, left, mid, right)
+		counter += mergeSort(list, mid, right)
+		counter += merge(list, left, mid, right)
 	}
+	return counter
 }
 
 var sc = bufio.NewScanner(os.Stdin)
@@ -69,5 +77,15 @@ func scanToInt() int {
 }
 
 func main() {
+	sc.Split(bufio.ScanWords)
+	n := scanToInt()
 
+	list := make([]int, n, n)
+	for i := 0; i < n; i++ {
+		list[i] = scanToInt()
+	}
+
+	counter := mergeSort(list, 0, n)
+
+	fmt.Println(counter)
 }
