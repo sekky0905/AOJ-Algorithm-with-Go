@@ -18,7 +18,7 @@ type node struct {
 }
 
 // setDepth は、depth を設定する。
-func setDepth(nodes []*node, currentNodeID, depth int) {
+func setDepth(nodes []node, currentNodeID, depth int) {
 	nodes[currentNodeID].depth = depth
 	for i := range nodes[currentNodeID].children {
 		// 自分の child に当たる node の depth をそれぞれ再帰的に設定していく
@@ -26,7 +26,7 @@ func setDepth(nodes []*node, currentNodeID, depth int) {
 	}
 }
 
-func bufferingNodeInfo(node *node, buf *bytes.Buffer) {
+func bufferingNodeInfo(node node, buf *bytes.Buffer) {
 	nodeType := "leaf"
 	if node.parent == -1 {
 		nodeType = "root"
@@ -38,74 +38,67 @@ func bufferingNodeInfo(node *node, buf *bytes.Buffer) {
 	buf.WriteString(fmt.Sprintf("node %d: parent = %d, depth = %d, %s, %s\n", node.id, node.parent, node.depth, nodeType, childStr))
 }
 
-var sc = bufio.NewScanner(os.Stdin)
-
-func scanToInt() int {
-	sc.Scan()
-	n, err := strconv.Atoi(sc.Text())
-	if err != nil {
-		panic(err)
+func initTree(nodes []node) {
+	for i := range nodes {
+		nodes[i].parent = -1
 	}
-	return n
 }
+
+var sc = bufio.NewScanner(os.Stdin)
 
 func scanToStr() string {
 	sc.Scan()
 	return sc.Text()
 }
 
-const (
-	idIndex = iota
-	degreeIndex
-)
-
 func main() {
-	// 高さ n
-	height := scanToInt()
+	// 高さ
+	var height int
+	fmt.Scan(&height)
 	// 高さ height の tree
-	tree := make([]*node, height)
+	tree := make([]node, height)
 
-	previousID := -1
+	initTree(tree)
+
+	sc.Split(bufio.ScanWords)
 	for i := 0; i < height; i++ {
-		// 1行ずつ取り出す
-		// 次数ごとの情報
-		row := scanToStr()
-		info := strings.Split(row, " ")
-
-		id, err := strconv.Atoi(info[idIndex])
+		id, err := strconv.Atoi(scanToStr())
 		if err != nil {
 			panic(err)
 		}
 
-		degree, err := strconv.Atoi(info[degreeIndex])
+		degree, err := strconv.Atoi(scanToStr())
 		if err != nil {
 			panic(err)
 		}
 
 		// child node を埋める
-		children := make([]int, degree, degree)
-		for i := 0; i < degree; i++ {
-			if children[i], err = strconv.Atoi(info[i+2]); err != nil { // +2は、id と degree の分
+		for j := 0; j < degree; j++ {
+			c, err := strconv.Atoi(scanToStr())
+			if err != nil {
 				panic(err)
 			}
-		}
 
-		tree[i] = &node{
-			parent:   previousID,
-			id:       id,
-			children: children,
+			tree[id].children = append(tree[id].children, c)
+			tree[c].parent = id
 		}
-
-		previousID = id
 	}
 
-	root := 0
+	root := -1
+	for i := 0; i < height; i++ {
+		if tree[i].parent == -1 {
+			root = i
+			break
+		}
+	}
+
 	setDepth(tree, root, 0)
 
 	buf := &bytes.Buffer{}
-	for _, node := range tree {
+	for i, node := range tree {
+		node.id = i
 		bufferingNodeInfo(node, buf)
 	}
 
-	fmt.Println(buf.String())
+	fmt.Print(buf.String())
 }
