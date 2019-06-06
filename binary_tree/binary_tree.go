@@ -49,6 +49,26 @@ func setHeight(index int) int {
 	return tree[index].height
 }
 
+// getSibling は、nodeの兄弟のnodeを返す。
+func getSibling(index int) int {
+	parent := tree[index].parent
+
+	if parent == empty {
+		return empty
+	}
+
+	// 親の左子nodeが自分自身ではなく、かつ、空でもない場合、それが己の兄弟node
+	if tree[parent].left != tree[index].id && tree[parent].left != empty {
+		return tree[parent].left
+	}
+	// 親の右子nodeが自分自身ではなく、かつ、空でもない場合、それが己の兄弟node
+	if tree[parent].right != tree[index].id && tree[parent].right != empty {
+		return tree[parent].right
+	}
+
+	return empty
+}
+
 func max(a, b int) int {
 	if a == b {
 		panic("a equals b!")
