@@ -18,6 +18,34 @@ type node struct {
 
 var tree []*node
 
+const empty = -1
+
+// setHeight は、二分木のnodeの高さを設定する。
+func setHeight(index int) int {
+	currentNode := tree[index]
+	leftHeight, rightHeight := 0, 0
+	if currentNode.left != empty {
+		leftHeight = setHeight(currentNode.left) + 1 // +1 は、root分
+	}
+
+	if currentNode.right != empty {
+		rightHeight = setHeight(currentNode.right) + 1
+	}
+
+	tree[index].height = max(leftHeight, rightHeight)
+	return tree[index].height
+}
+
+func max(a, b int) int {
+	if a == b {
+		panic("a equals b!")
+	}
+	if a > b {
+		return a
+	}
+	return b
+}
+
 var sc = bufio.NewScanner(os.Stdin)
 
 func scanToInt() int {
