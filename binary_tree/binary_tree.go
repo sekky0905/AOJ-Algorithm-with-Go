@@ -20,6 +20,19 @@ var tree []*node
 
 const empty = -1
 
+// setDegree は、二分木のnodeの深さを設定する。
+func setDegree(index, degree int) {
+	if tree[index].id == empty {
+		return
+	}
+
+	tree[index].degree = degree
+	// 左子node
+	setDegree(tree[index].left, degree+1)
+	// 右子node
+	setDegree(tree[index].right, degree+1)
+}
+
 // setHeight は、二分木のnodeの高さを設定する。
 func setHeight(index int) int {
 	currentNode := tree[index]
