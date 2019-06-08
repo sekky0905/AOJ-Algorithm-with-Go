@@ -2,47 +2,47 @@ package main
 
 import (
 	"bufio"
+	"bytes"
+	"fmt"
 	"os"
 	"strconv"
 )
 
 // node は、節を表す。
 type node struct {
-	id     int
 	parent int // 親のnode
 	left   int // 左子のnode
 	right  int // 右子のnode
-	degree int // 深さ(rootからnodeまでの長さ )
-	height int // 高さ(nodeから葉までの長さの最大)
+	depth  int
+	height int
 }
 
-var tree []*node
+var tree []node
 
 const empty = -1
 
-// setDegree は、二分木のnodeの深さを設定する。
-func setDegree(index, degree int) {
-	if tree[index].id == empty {
+// setDepth は、二分木のnodeの深さを設定する。
+func setDepth(index, depth int) {
+	if index == empty {
 		return
 	}
 
-	tree[index].degree = degree
+	tree[index].depth = depth
 	// 左子node
-	setDegree(tree[index].left, degree+1)
+	setDepth(tree[index].left, depth+1)
 	// 右子node
-	setDegree(tree[index].right, degree+1)
+	setDepth(tree[index].right, depth+1)
 }
 
 // setHeight は、二分木のnodeの高さを設定する。
 func setHeight(index int) int {
-	currentNode := tree[index]
-	leftHeight, rightHeight := 0, 0
-	if currentNode.left != empty {
-		leftHeight = setHeight(currentNode.left) + 1 // +1 は、root分
+	var leftHeight, rightHeight int
+	if tree[index].left != empty {
+		leftHeight = setHeight(tree[index].left) + 1 // +1 は、root分
 	}
 
-	if currentNode.right != empty {
-		rightHeight = setHeight(currentNode.right) + 1
+	if tree[index].right != empty {
+		rightHeight = setHeight(tree[index].right) + 1
 	}
 
 	tree[index].height = max(leftHeight, rightHeight)
@@ -58,11 +58,11 @@ func getSibling(index int) int {
 	}
 
 	// 親の左子nodeが自分自身ではなく、かつ、空でもない場合、それが己の兄弟node
-	if tree[parent].left != tree[index].id && tree[parent].left != empty {
+	if tree[parent].left != index && tree[parent].left != empty {
 		return tree[parent].left
 	}
 	// 親の右子nodeが自分自身ではなく、かつ、空でもない場合、それが己の兄弟node
-	if tree[parent].right != tree[index].id && tree[parent].right != empty {
+	if tree[parent].right != index && tree[parent].right != empty {
 		return tree[parent].right
 	}
 
@@ -70,9 +70,6 @@ func getSibling(index int) int {
 }
 
 func max(a, b int) int {
-	if a == b {
-		panic("a equals b!")
-	}
 	if a > b {
 		return a
 	}
@@ -90,20 +87,99 @@ func scanToInt() int {
 	return n
 }
 
-func main() {
-	n := scanToInt()
-	tree := make([]*node, n, n)
-
-	sc.Split(bufio.ScanWords)
-	for i := 0; i < n; i++ {
-		id, left, right := scanToInt(), scanToInt(), scanToInt()
-		node := &node{
-			id:    id,
-			left:  left,
-			right: right,
+func getRoot() int {
+	for i, node := range tree {
+		if node.parent == empty {
+			return i
 		}
+	}
+	return 0
+}
 
-		tree[i] = node
+func print(index int) {
+	degree := 0
+	if tree[index].left != empty {
+		degree++
 	}
 
+	if tree[index].right != empty {
+		degree++
+	}
+
+	var buf bytes.Buffer
+
+	buf.WriteString(fmt.Sprintf("node %d: ", index))
+	buf.WriteString(fmt.Sprintf("parent = %d, ", tree[index].parent))
+	buf.WriteString(fmt.Sprintf("sibling = %d, ", getSibling(index)))
+	buf.WriteString(fmt.Sprintf("degree = %d, ", degree))
+	buf.WriteString(fmt.Sprintf("depth = %d, ", tree[index].depth))
+	buf.WriteString(fmt.Sprintf("height = %d, ", tree[index].height))
+	buf.WriteString(fmt.Sprintf("%s\n", getNodeType(index).String()))
+
+	fmt.Print(buf.String())
+}
+
+type nodeType string
+
+func (n nodeType) String() string {
+	return string(n)
+}
+
+const (
+	root         nodeType = "root"
+	leaf         nodeType = "leaf"
+	internalNode nodeType = "internal node"
+)
+
+func getNodeType(index int) nodeType {
+	if tree[index].parent == empty {
+		return root
+	}
+
+	if tree[index].left == empty && tree[index].right == empty {
+		return leaf
+	}
+
+	return internalNode
+}
+
+func initTree(n int) {
+	tree = make([]node, n, n)
+	for i := 0; i < n; i++ {
+		tree[i] = node{
+			parent: empty,
+		}
+	}
+}
+
+func main() {
+	sc.Split(bufio.ScanWords)
+	n := scanToInt()
+
+	initTree(n)
+	for i := 0; i < n; i++ {
+		index, left, right := scanToInt(), scanToInt(), scanToInt()
+
+		tree[index].left = left
+		tree[index].right = right
+
+		// 左子nodeの親nodeはid
+		if left != empty {
+			tree[left].parent = index
+		}
+
+		// 右子nodeの親nodeはid
+		if right != empty {
+			tree[right].parent = index
+		}
+	}
+
+	root := getRoot()
+
+	setHeight(root)
+	setDepth(root, 0)
+
+	for i := 0; i < n; i++ {
+		print(i)
+	}
 }
