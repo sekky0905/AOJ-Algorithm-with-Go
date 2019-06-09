@@ -18,8 +18,7 @@ func preParse(index int) {
 		return
 	}
 
-	// TODO print
-
+	print("%d ", index)
 	// 左部分木
 	preParse(tree[index].left)
 	// 右部分木
@@ -33,8 +32,18 @@ func inParse(index int) {
 	}
 
 	inParse(tree[index].left)
-	// TODO print
+	print("%d ", index)
 	inParse(tree[index].right)
+}
+
+// 左部分木→右部分木→rootの順番で接点を表示する。
+func postParse(index int) {
+	if index == empty {
+		return
+	}
+	postParse(tree[index].left)
+	postParse(tree[index].right)
+	print("%d ", index)
 }
 
 func main() {
