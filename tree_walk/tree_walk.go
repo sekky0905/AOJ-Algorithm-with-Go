@@ -1,9 +1,16 @@
 package main
 
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+)
+
 type node struct {
-	id    int
-	left  int
-	right int
+	parent int
+	left   int
+	right  int
 }
 
 var tree []node
@@ -18,7 +25,7 @@ func preParse(index int) {
 		return
 	}
 
-	print("%d ", index)
+	fmt.Printf(" %d", index)
 	// 左部分木
 	preParse(tree[index].left)
 	// 右部分木
@@ -32,7 +39,7 @@ func inParse(index int) {
 	}
 
 	inParse(tree[index].left)
-	print("%d ", index)
+	fmt.Printf(" %d", index)
 	inParse(tree[index].right)
 }
 
@@ -43,7 +50,7 @@ func postParse(index int) {
 	}
 	postParse(tree[index].left)
 	postParse(tree[index].right)
-	print("%d ", index)
+	fmt.Printf(" %d", index)
 }
 
 type orderType string
@@ -54,6 +61,68 @@ const (
 	postOrder orderType = "Postorder"
 )
 
-func main() {
+var sc = bufio.NewScanner(os.Stdin)
 
+func scanToInt() int {
+	sc.Scan()
+	n, err := strconv.Atoi(sc.Text())
+	if err != nil {
+		panic(err)
+	}
+	return n
+}
+
+func setParent(index, id int) {
+	if index != empty {
+		tree[index].parent = id
+	}
+}
+
+func initTree(n int) {
+	tree = make([]node, n, n)
+	for i := 0; i < n; i++ {
+		tree[i] = node{
+			parent: empty,
+		}
+	}
+}
+
+func print(root int) {
+	fmt.Printf("%s\n", preOrder)
+	preParse(root)
+	fmt.Println()
+
+	fmt.Printf("%s\n", inOrder)
+	inParse(root)
+	fmt.Println()
+
+	fmt.Printf("%s\n", postOrder)
+	postParse(root)
+	fmt.Println()
+}
+
+func main() {
+	sc.Split(bufio.ScanWords)
+
+	n := scanToInt()
+	initTree(n)
+
+	for i := 0; i < n; i++ {
+		id, left, right := scanToInt(), scanToInt(), scanToInt()
+		tree[id].left = left
+		tree[id].right = right
+
+		setParent(left, id)
+		setParent(right, id)
+
+	}
+
+	root := 0
+	for i := 0; i < n; i++ {
+		if tree[i].parent == empty {
+			root = i
+		}
+	}
+
+	print(root)
 }
