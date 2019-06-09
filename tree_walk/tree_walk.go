@@ -46,6 +46,14 @@ func postParse(index int) {
 	print("%d ", index)
 }
 
+type orderType string
+
+const (
+	preOrder  orderType = "Preorder"
+	inOrder   orderType = "Inorder"
+	postOrder orderType = "Postorder"
+)
+
 func main() {
 
 }
