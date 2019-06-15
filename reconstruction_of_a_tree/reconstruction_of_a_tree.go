@@ -6,18 +6,22 @@ import (
 	"strconv"
 )
 
-var sc = bufio.NewScanner(os.Stdin)
+type orders []int
 
-func main() {
-	sc.Split(bufio.ScanWords)
+// preOrders は、先行順巡回による数列
+var preOrders orders
 
-	n := scanToInt()
+// inOrders は、中間順巡回による数列
+var inOrders orders
 
-	// 先行順巡回による数列
-	pre := getInputList(n)
-	// 中間順巡回による数列
-	in := getInputList(n)
-
+// find は、引数で与えられた数字のordersでのindexを返す。
+func (o orders) find(target int) int {
+	for i, v := range o {
+		if v == target {
+			return i
+		}
+	}
+	return -1
 }
 
 func getInputList(n int) []int {
@@ -28,6 +32,8 @@ func getInputList(n int) []int {
 	return list
 }
 
+var sc = bufio.NewScanner(os.Stdin)
+
 func scanToInt() int {
 	sc.Scan()
 	n, err := strconv.Atoi(sc.Text())
@@ -35,4 +41,13 @@ func scanToInt() int {
 		panic(err)
 	}
 	return n
+}
+
+func main() {
+	sc.Split(bufio.ScanWords)
+
+	n := scanToInt()
+	preOrders = getInputList(n)
+	inOrders = getInputList(n)
+
 }
