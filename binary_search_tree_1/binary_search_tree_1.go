@@ -53,3 +53,12 @@ func preOrder(u *node) {
 	preOrder(u.left)
 	preOrder(u.right)
 }
+func inOrder(u *node) {
+	if u == nil {
+		return
+	}
+
+	inOrder(u.left)
+	buf.WriteString(fmt.Sprintf(" %d", u.key))
+	inOrder(u.right)
+}
