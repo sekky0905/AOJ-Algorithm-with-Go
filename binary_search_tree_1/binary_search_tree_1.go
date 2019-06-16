@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
+	"strings"
 )
 
 // node は、節点を表す。
@@ -75,5 +77,48 @@ func execute(method string, num int) {
 		preOrder(root)
 		buf.WriteString("\n")
 		buf.Flush()
+	}
+}
+
+const (
+	methodIndex = iota
+	numIndex
+)
+
+func getMethodAndNumFromInput(input string) (method string, num int, err error) {
+	s := strings.Split(input, " ")
+
+	method = s[methodIndex]
+	if len(s) == 2 {
+		num, err = strconv.Atoi(s[numIndex])
+		if err != nil {
+			return "", -1, err
+		}
+	}
+
+	return
+}
+
+var sc = bufio.NewScanner(os.Stdin)
+
+func scanToInt() int {
+	sc.Scan()
+	n, err := strconv.Atoi(sc.Text())
+	if err != nil {
+		panic(err)
+	}
+	return n
+}
+
+func main() {
+	n := scanToInt()
+	for i := 0; i < n; i++ {
+		sc.Scan()
+		input := sc.Text()
+		method, num, err := getMethodAndNumFromInput(input)
+		if err != nil {
+			panic(err)
+		}
+		execute(method, num)
 	}
 }
