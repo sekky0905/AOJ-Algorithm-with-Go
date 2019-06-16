@@ -1,5 +1,11 @@
 package main
 
+import (
+	"bufio"
+	"os"
+	"strconv"
+)
+
 // node は、節点を表す。
 type node struct {
 	key    int
@@ -34,6 +40,17 @@ func insert(z *node) {
 	} else {
 		y.right = z // yの右の子にzを設定する
 	}
+}
+
+var sc = bufio.NewScanner(os.Stdin)
+
+func scanToInt() int {
+	sc.Scan()
+	n, err := strconv.Atoi(sc.Text())
+	if err != nil {
+		panic(err)
+	}
+	return n
 }
 
 func main() {
