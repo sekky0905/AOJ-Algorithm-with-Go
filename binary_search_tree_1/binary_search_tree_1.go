@@ -2,8 +2,8 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"os"
-	"strconv"
 )
 
 // node は、節点を表す。
@@ -42,17 +42,14 @@ func insert(z *node) {
 	}
 }
 
-var sc = bufio.NewScanner(os.Stdin)
+var buf = bufio.NewWriter(os.Stdout)
 
-func scanToInt() int {
-	sc.Scan()
-	n, err := strconv.Atoi(sc.Text())
-	if err != nil {
-		panic(err)
+func preOrder(u *node) {
+	if u == nil {
+		return
 	}
-	return n
-}
 
-func main() {
-
+	buf.WriteString(fmt.Sprintf(" %d", u.key))
+	preOrder(u.left)
+	preOrder(u.right)
 }
