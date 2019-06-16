@@ -62,3 +62,18 @@ func inOrder(u *node) {
 	buf.WriteString(fmt.Sprintf(" %d", u.key))
 	inOrder(u.right)
 }
+
+func execute(method string, num int) {
+	target := &node{
+		key: num,
+	}
+	if method == "insert" {
+		insert(target)
+	} else {
+		inOrder(root)
+		buf.WriteString("\n")
+		preOrder(root)
+		buf.WriteString("\n")
+		buf.Flush()
+	}
+}
