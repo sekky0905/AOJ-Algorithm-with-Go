@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -78,18 +79,27 @@ func inOrder(u *node) {
 	inOrder(u.right)
 }
 
-func execute(method string, num int) {
+func execute(method string, num int) error {
 	target := &node{
 		key: num,
 	}
-	if method == "insert" {
+
+	switch method {
+	case "insert":
 		insert(target)
-	} else {
+		return nil
+	case "find":
+		find(root, num)
+		return nil
+	case "print":
 		inOrder(root)
 		buf.WriteString("\n")
 		preOrder(root)
 		buf.WriteString("\n")
 		buf.Flush()
+		return nil
+	default:
+		return errors.New("unexpected method")
 	}
 }
 
@@ -132,6 +142,8 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		execute(method, num)
+		if err := execute(method, num); err != nil {
+			panic(err)
+		}
 	}
 }
