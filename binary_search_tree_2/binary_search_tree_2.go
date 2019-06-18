@@ -89,7 +89,11 @@ func execute(method string, num int) error {
 		insert(target)
 		return nil
 	case "find":
-		find(root, num)
+		if find(root, num) {
+			fmt.Println("yes")
+			return nil
+		}
+		fmt.Println("no")
 		return nil
 	case "print":
 		inOrder(root)
