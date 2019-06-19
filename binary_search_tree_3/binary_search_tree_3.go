@@ -73,7 +73,7 @@ func delete(z *node) {
 		y = z
 	} else { // zが2つの子nodeを持つ場合には
 		// zの次のnode
-		// y = getSuccessor()
+		y = getSuccessor(z)
 	}
 
 	// x = yの子node
@@ -106,6 +106,23 @@ func delete(z *node) {
 		// zの次のnodeが削除された場合、yのkeyをzのkeyにする
 		z.key = y.key
 	}
+}
+
+// getSuccessor は、引数で与えられたnodeの次nodeを返す。
+func getSuccessor(x *node) *node {
+	// 右の子nodeが存在する場合は、右nodeの中の最小のnodeが次のnodeとなる
+	if x.right != nil {
+		return getMinimum(x.right)
+	}
+
+	y := x.parent
+	// 親のnodeが存在し、親nodeの右の子nodeが対象nodeの場合
+	for y != nil && x == y.right {
+		// xの親nodeをxにし、yの親nodeをyにする
+		x = y
+		y = y.parent
+	}
+	return y
 }
 
 // getMinimum は、引数で与えられたnodeをrootとする部分木の中で最小のkeyを持つnodeを返す。
