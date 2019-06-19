@@ -177,6 +177,9 @@ func execute(method string, num int) error {
 		buf.WriteString("\n")
 		buf.Flush()
 		return nil
+	case "delete":
+		delete(find(root, num))
+		return nil
 	default:
 		return errors.New("unexpected method")
 	}
