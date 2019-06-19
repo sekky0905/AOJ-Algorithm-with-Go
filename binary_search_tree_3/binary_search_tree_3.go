@@ -108,6 +108,14 @@ func delete(z *node) {
 	}
 }
 
+// getMinimum は、引数で与えられたnodeをrootとする部分木の中で最小のkeyを持つnodeを返す。
+func getMinimum(x *node) *node {
+	for x.left != nil {
+		x = x.left
+	}
+	return x
+}
+
 var buf = bufio.NewWriter(os.Stdout)
 
 func preOrder(u *node) {
