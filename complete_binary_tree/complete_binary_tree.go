@@ -3,8 +3,8 @@ package main
 type tree []int
 
 // getParent は、indexで指定されたnodeの親nodeのkeyを取得する。
-func getParent(index int) int {
-	return 0
+func (t tree) getParent(index int) int {
+	return t[index/2]
 }
 
 // getLeft は、indexで指定されたnodeの左の子nodeのkeyを取得する。
