@@ -12,9 +12,9 @@ func getLeftIndex(index int) int {
 	return index * 2
 }
 
-// getRight は、indexで指定されたnodeの左の子nodeのkeyを取得する。
-func geRight() int {
-	return 0
+// getRight は、indexで指定されたnodeの左の子nodeのindexを取得する。
+func geRight(index int) int {
+	return index*2 + 1
 }
 
 func main() {
