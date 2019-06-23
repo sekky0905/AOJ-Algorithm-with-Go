@@ -32,22 +32,31 @@ func print(tree []int, n int) {
 	var buf bytes.Buffer
 
 	for i, node := range tree {
-		p, r, l := getParent(i), getLeftIndex(i), geRightIndex(i)
 
-		buf.WriteString(fmt.Sprintf("node %d: key = %d,", i, node))
-		if isValidIndex(p, n) {
-			buf.WriteString(fmt.Sprintf(" parent key =%d,", p))
+		// index=0は使用しないので、スキップ
+		if i == 0 {
+			continue
 		}
 
-		if isValidIndex(r, n) {
-			buf.WriteString(fmt.Sprintf(" left key =%d,", p))
+		parent, left, right := getParent(i), getLeftIndex(i), geRightIndex(i)
+
+		buf.WriteString(fmt.Sprintf("node %d: key = %d, ", i, node))
+
+		if isValidIndex(parent, n) {
+			buf.WriteString(fmt.Sprintf("parent key = %d, ", tree[parent]))
 		}
 
-		if isValidIndex(l, n) {
-			buf.WriteString(fmt.Sprintf(" right key = =%d", p))
+		if isValidIndex(left, n) {
+			buf.WriteString(fmt.Sprintf("left key = %d, ", tree[left]))
+		}
+
+		if isValidIndex(right, n) {
+			buf.WriteString(fmt.Sprintf("right key = %d, ", tree[right]))
 		}
 		buf.WriteString("\n")
 	}
+
+	fmt.Print(buf.String())
 }
 
 var sc = bufio.NewScanner(os.Stdin)
@@ -62,15 +71,14 @@ func scanToInt() int {
 }
 
 func main() {
-	n := scanToInt()
-
 	sc.Split(bufio.ScanWords)
-
+	n := scanToInt()
 	// index=0は、使用しないため
 	tree := make([]int, n+1, n+1)
-	for i := 0; i < n; i++ {
+	for i := 1; i < n+1; i++ {
 		v := scanToInt()
 		tree[i] = v
 	}
 
+	print(tree, n)
 }
