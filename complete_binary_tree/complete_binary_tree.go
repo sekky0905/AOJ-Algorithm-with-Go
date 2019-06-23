@@ -9,7 +9,7 @@ import (
 )
 
 // getParentIndex は、indexで指定されたnodeの親nodeのindexを取得する。
-func getParent(index int) int {
+func getParentIndex(index int) int {
 	return index / 2
 }
 
@@ -38,7 +38,7 @@ func print(tree []int, n int) {
 			continue
 		}
 
-		parent, left, right := getParent(i), getLeftIndex(i), geRightIndex(i)
+		parent, left, right := getParentIndex(i), getLeftIndex(i), geRightIndex(i)
 
 		buf.WriteString(fmt.Sprintf("node %d: key = %d, ", i, node))
 
