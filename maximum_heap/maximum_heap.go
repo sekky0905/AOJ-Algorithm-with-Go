@@ -37,6 +37,14 @@ func makeMaxHeap(tree []int, index int) {
 
 }
 
+func buildMaxHeap(tree []int) {
+	// 子nodeを持つ最大のnodeのindexは、len(tree) / 2
+	for i := len(tree) / 2; i >= 1; i-- {
+		makeMaxHeap(tree, i)
+	}
+
+}
+
 func main() {
 
 }
