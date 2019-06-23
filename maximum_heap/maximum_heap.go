@@ -1,5 +1,11 @@
 package main
 
+import (
+	"bufio"
+	"os"
+	"strconv"
+)
+
 // getLeftIndex は、indexで指定されたnodeの左の子nodeのkeyのindexを取得する。
 func getLeftIndex(index int) int {
 	return index * 2
@@ -45,6 +51,24 @@ func buildMaxHeap(tree []int) {
 
 }
 
-func main() {
+var sc = bufio.NewScanner(os.Stdin)
 
+func scanToInt() int {
+	sc.Scan()
+	n, err := strconv.Atoi(sc.Text())
+	if err != nil {
+		panic(err)
+	}
+	return n
+}
+
+func main() {
+	sc.Split(bufio.ScanWords)
+	n := scanToInt()
+	// index=0は、使用しないため
+	tree := make([]int, n+1, n+1)
+	for i := 1; i < n+1; i++ {
+		v := scanToInt()
+		tree[i] = v
+	}
 }
