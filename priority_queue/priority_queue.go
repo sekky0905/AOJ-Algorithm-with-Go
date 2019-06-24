@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 // getParentIndex は、indexで指定されたnodeの親nodeのindexを取得する。
 func getParentIndex(index int) int {
 	return index / 2
@@ -18,6 +20,12 @@ func geRightIndex(index int) int {
 // isValidIndex は与えられたindexが有効なものかどうかを確認する。
 func isValidIndex(index, n int) bool {
 	return index <= n && index > 0
+}
+
+// insert は、treeの適切な位置にkeyを格納する。
+func insert(tree []int, key int) {
+	tree = append(tree, math.MinInt32)
+	heapIncreaseKey(tree, len(tree), key)
 }
 
 // heapIncreaseKey は、treeのindexで指定されたnode以上の適切な位置にkeyを格納する。
