@@ -15,6 +15,11 @@ func geRightIndex(index int) int {
 	return index*2 + 1
 }
 
+// isValidIndex は与えられたindexが有効なものかどうかを確認する。
+func isValidIndex(index, n int) bool {
+	return index <= n && index > 0
+}
+
 func main() {
 
 }
