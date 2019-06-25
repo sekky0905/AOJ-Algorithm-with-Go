@@ -1,7 +1,12 @@
 package main
 
 import (
+	"bufio"
+	"fmt"
 	"math"
+	"os"
+	"strconv"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -79,7 +84,11 @@ func heapIncreaseKey(tree []int, index, key int) {
 	}
 }
 
-const rootIndex = 1
+const (
+	rootIndex   = 1
+	methodIndex = 0
+	keyIndex    = 1
+)
 
 // getMaxFromHeap は、heapの最大要素を取得する。
 func getMaxFromHeap(tree []int) int {
@@ -103,6 +112,47 @@ func delete(s []int, index int) []int {
 	return append(s[:index], s[index+1:]...)
 }
 
-func main() {
+var sc = bufio.NewScanner(os.Stdin)
 
+func scanToText() string {
+	sc.Scan()
+	return sc.Text()
+}
+
+func solve(tree []int, method, keyStr string) error {
+	key, err := strconv.Atoi(keyStr)
+	if err != nil {
+		return err
+	}
+
+	if method == "insert" {
+		insert(tree, key)
+	}
+
+	if method == "extract" {
+		max := getMaxFromHeap(tree)
+		if err := deleteMaxFromHeap(tree); err != nil {
+			return err
+		}
+		fmt.Println(max)
+	}
+	return nil
+}
+
+func main() {
+	sc.Split(bufio.ScanWords)
+
+	tree := make([]int, 0)
+
+	for {
+		str := scanToText()
+		if str == "end" {
+			break
+		}
+		s := strings.Split(str, " ")
+		m, k := s[methodIndex], s[keyIndex]
+		if err := solve(tree, m, k); err != nil {
+			panic(err)
+		}
+	}
 }
