@@ -55,13 +55,6 @@ func makeMaxHeap(tree []int, index int) {
 
 }
 
-func buildMaxHeap(tree []int) {
-	// 子nodeを持つ最大のnodeのindexは、len(tree) / 2
-	for i := len(tree) / 2; i >= 1; i-- {
-		makeMaxHeap(tree, i)
-	}
-}
-
 // insert は、treeの適切な位置にkeyを格納する。
 func insert(tree []int, key int) {
 	tree = append(tree, math.MinInt32)
@@ -86,14 +79,28 @@ func heapIncreaseKey(tree []int, index, key int) {
 	}
 }
 
+const rootIndex = 1
+
 // getMaxFromHeap は、heapの最大要素を取得する。
-func getMaxFromHeap(tree []int) (int, error) {
+func getMaxFromHeap(tree []int) int {
+	return tree[rootIndex]
+}
+
+func deleteMaxFromHeap(tree []int) error {
 	if len(tree) < 1 {
-		return math.MinInt32, errors.New("tree should be over 0")
+		return errors.New("tree should be over 0")
 	}
 
-	const rootIndex = 1
-	return tree[rootIndex], nil
+	n := len(tree)
+	tree[rootIndex] = tree[n]
+	tree = delete(tree, n)
+	makeMaxHeap(tree, rootIndex)
+
+	return nil
+}
+
+func delete(s []int, index int) []int {
+	return append(s[:index], s[index+1:]...)
 }
 
 func main() {
