@@ -1,6 +1,10 @@
 package main
 
-import "math"
+import (
+	"math"
+
+	"github.com/pkg/errors"
+)
 
 // getParentIndex は、indexで指定されたnodeの親nodeのindexを取得する。
 func getParentIndex(index int) int {
@@ -56,7 +60,6 @@ func buildMaxHeap(tree []int) {
 	for i := len(tree) / 2; i >= 1; i-- {
 		makeMaxHeap(tree, i)
 	}
-
 }
 
 // insert は、treeの適切な位置にkeyを格納する。
@@ -81,6 +84,16 @@ func heapIncreaseKey(tree []int, index, key int) {
 		tree[index], tree[getParentIndex(index)] = tree[getParentIndex(index)], tree[index]
 		index = getParentIndex(index)
 	}
+}
+
+// getMaxFromHeap は、heapの最大要素を取得する。
+func getMaxFromHeap(tree []int) (int, error) {
+	if len(tree) < 1 {
+		return math.MinInt32, errors.New("tree should be over 0")
+	}
+
+	const rootIndex = 1
+	return tree[rootIndex], nil
 }
 
 func main() {
