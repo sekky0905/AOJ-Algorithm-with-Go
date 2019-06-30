@@ -1,4 +1,4 @@
-# AOJ-Algorithm
+# AOJ-Algorithm-with-Go
 
 アルゴリズムのお勉強
 [AIZU ONLINE JUDGE](http://judge.u-aizu.ac.jp/onlinejudge/index.jsp) のコースをGoでやっていく。
