@@ -12,18 +12,14 @@ func getLCS(x, y string) int{
 	m := len(x)
 	n := len(y)
 
-	c := make([][]int, 0)
+	c := make([][]int, m+1)
 
 	maxLength := 0
 	x = addSpaceToHead(x)
 	y = addSpaceToHead(y)
 
-	for i := 1; i <= m; i++ {
-		c[i][0] = 0
-	}
-
-	for j := 1; j <= m; j++ {
-		c[0][j] = 0
+	for i := 0; i <= m; i++ {
+		c[i] = make([]int, n+1)
 	}
 
 	for i := 1; i <= m; i++ {
@@ -61,6 +57,17 @@ func scanToInt() int {
 	return n
 }
 
-func main() {
+func scanToText() string{
+	sc.Scan()
+	return sc.Text()
+}
 
+
+func main() {
+	n := scanToInt()
+	for i:= 0; i < n; i++ {
+		s1, s2 := scanToText(), scanToText()
+		ans := getLCS(s1, s2)
+		fmt.Println(ans)
+	}
 }
