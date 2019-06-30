@@ -1,4 +1,4 @@
-package fibonacci_number
+package main
 
 import (
 	"bufio"
