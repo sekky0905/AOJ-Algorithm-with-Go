@@ -2,13 +2,17 @@ package fibonacci_number
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"strconv"
 )
 
 var tree []int
 
-const initialNum = 0
+const (
+	initialNum = 0
+	maxNum     = 45
+)
 
 // calcFibonacci は、fibonacci数列のn番目の値を返す。
 func calcFibonacci(n int) int {
@@ -34,4 +38,12 @@ func scanToInt() int {
 		panic(err)
 	}
 	return n
+}
+
+func main() {
+	n := scanToInt()
+	tree = make([]int, maxNum, maxNum)
+
+	fmt.Println(calcFibonacci(n))
+
 }
