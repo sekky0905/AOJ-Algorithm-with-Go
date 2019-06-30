@@ -1,6 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+)
 
 // getLCS は、再調共通部分列を取得する。
 func getLCS(x, y string) int{
@@ -43,6 +48,17 @@ func max(a, b int) int{
 		return a
 	}
 	return b
+}
+
+var sc = bufio.NewScanner(os.Stdin)
+
+func scanToInt() int {
+	sc.Scan()
+	n, err := strconv.Atoi(sc.Text())
+	if err != nil {
+		panic(err)
+	}
+	return n
 }
 
 func main() {
