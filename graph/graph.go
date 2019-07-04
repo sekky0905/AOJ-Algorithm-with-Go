@@ -11,6 +11,7 @@ import (
 
 const (
 	exist = 1
+	k = 1
 )
 
 // adjacentMatrix は、隣接行列を表す。
@@ -19,6 +20,9 @@ var adjacentMatrix [][]int
 // initAdjacentMatrix は、adjacentMatrixを初期化する。
 func initAdjacentMatrix(n int) {
 	adjacentMatrix = make([][]int, n, n)
+	for i := range adjacentMatrix {
+		adjacentMatrix[i] = make([]int, n)
+	}
 }
 
 // pushRowToAdjacentMatrix は、行をadjacentMatrixのnum番目に格納する。
@@ -30,7 +34,7 @@ func pushRowToAdjacentMatrix(num int, row []int) {
 
 func print() {
 	var buf bytes.Buffer
-	for i, row := range adjacentMatrix {
+	for _, row := range adjacentMatrix {
 		for j, v := range row {
 			if j == len(row) -1 {
 				buf.WriteString(fmt.Sprintf("%d\n", v))
@@ -39,6 +43,7 @@ func print() {
 			}
 		}
 	}
+	fmt.Print(buf.String())
 }
 
 
@@ -65,16 +70,20 @@ func main() {
 	for i:= 0; i< n; i++ {
 		s := scanToText()
 		rowStr := strings.Split(s, " ")
-		length := len(rowStr)
-		row := make([]int, length, length)
-		for i, strV := range rowStr {
+		k, err := strconv.Atoi(rowStr[k])
+		if err != nil {
+			panic(err)
+		}
+
+		row := make([]int, k, k)
+		for j, strV := range rowStr[2:] {
 			numV, err := strconv.Atoi(strV)
 			if err != nil {
 				panic(err)
 			}
-			row[i] = numV
+			row[j] = numV -1 // indexのため
 		}
-		pushRowToAdjacentMatrix(length, row)
+		pushRowToAdjacentMatrix(i, row)
 	}
 	print()
 }
