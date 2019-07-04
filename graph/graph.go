@@ -2,6 +2,8 @@ package main
 
 import (
 	"bufio"
+	"bytes"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -25,6 +27,20 @@ func pushRowToAdjacentMatrix(num int, row []int) {
 		adjacentMatrix[num][column] = exist
 	}
 }
+
+func print() {
+	var buf bytes.Buffer
+	for i, row := range adjacentMatrix {
+		for j, v := range row {
+			if j == len(row) -1 {
+				buf.WriteString(fmt.Sprintf("%d\n", v))
+			} else {
+				buf.WriteString(fmt.Sprintf("%d ", v))
+			}
+		}
+	}
+}
+
 
 var sc = bufio.NewScanner(os.Stdin)
 
@@ -60,4 +76,5 @@ func main() {
 		}
 		pushRowToAdjacentMatrix(length, row)
 	}
+	print()
 }
