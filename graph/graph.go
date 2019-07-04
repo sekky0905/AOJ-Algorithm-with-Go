@@ -25,7 +25,6 @@ func pushRowToAdjacentMatrix(num int, row []int) {
 	}
 }
 
-
 var sc = bufio.NewScanner(os.Stdin)
 
 func scanToInt() int {
@@ -35,6 +34,11 @@ func scanToInt() int {
 		panic(err)
 	}
 	return n
+}
+
+func scanToText() string {
+	sc.Scan()
+	return sc.Text()
 }
 
 func main() {
