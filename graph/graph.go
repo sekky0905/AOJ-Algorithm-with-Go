@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"os"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -42,5 +43,21 @@ func scanToText() string {
 }
 
 func main() {
+	n := scanToInt()
+	initAdjacentMatrix(n)
 
+	for i:= 0; i< n; i++ {
+		s := scanToText()
+		rowStr := strings.Split(s, " ")
+		length := len(rowStr)
+		row := make([]int, length, length)
+		for i, strV := range rowStr {
+			numV, err := strconv.Atoi(strV)
+			if err != nil {
+				panic(err)
+			}
+			row[i] = numV
+		}
+		pushRowToAdjacentMatrix(length, row)
+	}
 }
