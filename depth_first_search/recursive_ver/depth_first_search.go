@@ -1,10 +1,11 @@
-package recursive_ver
+package main
 
 import (
 	"bufio"
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 )
 
 const maxLength = 100
@@ -13,7 +14,8 @@ var (
 	// adjacentMatrix は、隣接行列を表す。
 	adjacentMatrix [][]bool
 	// timeCounter は全体の時刻を表す。
-	timeCounter int = 0
+	timeCounter int
+	n           int
 )
 
 type color string
@@ -34,44 +36,41 @@ type node struct {
 var nodes []node
 
 // deepFirstSearch は、深さ優先探索で訪問する。
-func deepFirstSearchVisit(n, u int) {
+func deepFirstSearchVisit(u int) {
 	// 今回訪問した
 	timeCounter++
-	nodes[u] = node{
-		color:     gray,
-		foundTime: timeCounter,
-	}
+	nodes[u].color = gray
+	nodes[u].foundTime = timeCounter
 
 	for i := 0; i < n; i++ {
 		if !adjacentMatrix[u][i] { // 隣接行列の今回の箇所に存在しない場合
 			continue
 		}
 		if nodes[i].color == white { // 未踏なら再帰的にその頂点から深さ優先探索で訪問する
-			deepFirstSearchVisit(n, i)
+			deepFirstSearchVisit(i)
 		}
 	}
 	// 完了した
 	timeCounter++
-	nodes[u] = node{
-		color:     black,
-		foundTime: timeCounter,
-	}
+	nodes[u].color = black
+	nodes[u].completedTime = timeCounter
 }
 
 // deepFirstSearch は、深さ優先探索を行う。
-func deepFirstSearch(n int) {
-	for _, node := range nodes { // 初期化する
-		node.color = white
+func deepFirstSearch() {
+	nodes = make([]node, maxLength, maxLength)
+	for i := range nodes { // 初期化する
+		nodes[i].color = white
 	}
 
 	for u := 0; u < n; u++ {
 		if nodes[u].color == white {
-			deepFirstSearchVisit(n, u)
+			deepFirstSearchVisit(u)
 		}
 	}
 }
 
-func print(n int) {
+func print() {
 	for i := 0; i < n; i++ {
 		fmt.Printf("%d %d %d\n", i+1, nodes[i].foundTime, nodes[i].completedTime)
 	}
@@ -93,6 +92,36 @@ func scanToText() string {
 	return sc.Text()
 }
 
-func main() {
+// initAdjacentMatrix は、adjacentMatrixを初期化する。
+func initAdjacentMatrix() {
+	adjacentMatrix = make([][]bool, n, n)
+	for i := range adjacentMatrix {
+		adjacentMatrix[i] = make([]bool, n)
+	}
+}
 
+func main() {
+	n = scanToInt()
+	initAdjacentMatrix()
+
+	for i := 0; i < n; i++ {
+		str := scanToText()
+
+		s := strings.Split(str, " ")
+
+		u, err := strconv.Atoi(s[0])
+		if err != nil {
+			panic(err)
+		}
+
+		for _, vStr := range s[2:] {
+			v, err := strconv.Atoi(vStr)
+			if err != nil {
+				panic(err)
+			}
+			adjacentMatrix[u-1][v-1] = true //indexの分引く
+		}
+	}
+	deepFirstSearch()
+	print()
 }
