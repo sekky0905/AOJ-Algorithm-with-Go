@@ -26,8 +26,8 @@ type node struct {
 
 var nodes []node
 
-// deepFirstSearch は、深さ優先探索を行う。
-func deepFirstSearch(n, u int) {
+// deepFirstSearch は、深さ優先探索で訪問する。
+func deepFirstSearchVisit(n, u int) {
 	// 今回訪問した
 	timeCounter++
 	nodes[u] = node{
@@ -39,8 +39,8 @@ func deepFirstSearch(n, u int) {
 		if !adjacentMatrix[u][i] { // 隣接行列の今回の箇所に存在しない場合
 			continue
 		}
-		if nodes[i].color == white { // 未踏なら再帰的にその頂点から深さ優先探索を行う
-			deepFirstSearch(n, i)
+		if nodes[i].color == white { // 未踏なら再帰的にその頂点から深さ優先探索で訪問する
+			deepFirstSearchVisit(n, i)
 		}
 	}
 	// 完了した
@@ -48,6 +48,19 @@ func deepFirstSearch(n, u int) {
 	nodes[u] = node{
 		color:     black,
 		foundTime: timeCounter,
+	}
+}
+
+// deepFirstSearch は、深さ優先探索を行う。
+func deepFirstSearch(n int) {
+	for _, node := range nodes { // 初期化する
+		node.color = white
+	}
+
+	for u := 0; u < n; u++ {
+		if nodes[u].color == white {
+			deepFirstSearchVisit(n, u)
+		}
 	}
 }
 
