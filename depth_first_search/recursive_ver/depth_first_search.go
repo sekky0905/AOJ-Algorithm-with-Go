@@ -1,5 +1,7 @@
 package recursive_ver
 
+import "fmt"
+
 const maxLength = 100
 
 var (
@@ -61,6 +63,12 @@ func deepFirstSearch(n int) {
 		if nodes[u].color == white {
 			deepFirstSearchVisit(n, u)
 		}
+	}
+}
+
+func print(n int) {
+	for i := 0; i < n; i++ {
+		fmt.Printf("%d %d %d\n", i+1, nodes[i].foundTime, nodes[i].completedTime)
 	}
 }
 
