@@ -1,6 +1,11 @@
 package recursive_ver
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+)
 
 const maxLength = 100
 
@@ -70,6 +75,17 @@ func print(n int) {
 	for i := 0; i < n; i++ {
 		fmt.Printf("%d %d %d\n", i+1, nodes[i].foundTime, nodes[i].completedTime)
 	}
+}
+
+var sc = bufio.NewScanner(os.Stdin)
+
+func scanToInt() int {
+	sc.Scan()
+	n, err := strconv.Atoi(sc.Text())
+	if err != nil {
+		panic(err)
+	}
+	return n
 }
 
 func main() {
