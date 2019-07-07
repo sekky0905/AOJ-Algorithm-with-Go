@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 )
 
 const maxLength = 100
@@ -147,6 +148,36 @@ func scanToText() string {
 	return sc.Text()
 }
 
-func main() {
+// initAdjacentMatrix は、adjacentMatrixを初期化する。
+func initAdjacentMatrix() {
+	adjacentMatrix = make([][]bool, n, n)
+	for i := range adjacentMatrix {
+		adjacentMatrix[i] = make([]bool, n)
+	}
+}
 
+func main() {
+	n = scanToInt()
+	initAdjacentMatrix()
+
+	for i := 0; i < n; i++ {
+		str := scanToText()
+
+		s := strings.Split(str, " ")
+
+		u, err := strconv.Atoi(s[0])
+		if err != nil {
+			panic(err)
+		}
+
+		for _, vStr := range s[2:] {
+			v, err := strconv.Atoi(vStr)
+			if err != nil {
+				panic(err)
+			}
+			adjacentMatrix[u-1][v-1] = true //indexの分引く
+		}
+	}
+	deepFirstSearch()
+	print()
 }
