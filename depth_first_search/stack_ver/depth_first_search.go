@@ -178,6 +178,8 @@ func main() {
 			adjacentMatrix[u-1][v-1] = true //indexの分引く
 		}
 	}
-	deepFirstSearch()
+	if err := deepFirstSearch(); err != nil {
+		panic(err)
+	}
 	print()
 }
