@@ -54,6 +54,23 @@ func (s simpleStack) top() (int, error) {
 
 var stack simpleStack
 
+// deepFirstSearch は深さ優先探索を行う。
+func deepFirstSearch() error {
+	nodes = make([]node, n, n)
+	for i := range nodes {
+		nodes[i].color = white
+	}
+
+	for i := 0; i < n; i++ {
+		if nodes[i].color == white { // 未訪問の頂点を深さ優先探索する
+			if err := deepFirstSearchVisit(i); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // deepFirstSearchVisit は、深さ優先探索で訪問する。
 func deepFirstSearchVisit(u int) error {
 	stack.push(u) // 訪問する頂点uをスタックに追加
@@ -85,7 +102,7 @@ func deepFirstSearchVisit(u int) error {
 			nodes[v].completedTime++
 		}
 	}
-
+	return nil
 }
 
 // getNextNode は隣接する頂点を番号順に取得する。
