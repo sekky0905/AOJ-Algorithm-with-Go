@@ -35,7 +35,7 @@ type node struct {
 
 var nodes []node
 
-// deepFirstSearch は、深さ優先探索で訪問する。
+// deepFirstSearchVisit は、深さ優先探索で訪問する。
 func deepFirstSearchVisit(u int) {
 	// 今回訪問した
 	timeCounter++
