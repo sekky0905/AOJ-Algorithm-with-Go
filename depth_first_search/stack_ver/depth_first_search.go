@@ -1,6 +1,10 @@
 package main
 
-import "errors"
+import (
+	"bytes"
+	"errors"
+	"fmt"
+)
 
 const maxLength = 100
 
@@ -69,6 +73,14 @@ func deepFirstSearch() error {
 		}
 	}
 	return nil
+}
+
+func print() {
+	var buf bytes.Buffer
+	for i := 0; i < n; i++ {
+		buf.WriteString(fmt.Sprintf("%d %d %d\n", i+1, nodes[i].foundTime, nodes[i].completedTime))
+	}
+	fmt.Print(buf.String())
 }
 
 // deepFirstSearchVisit は、深さ優先探索で訪問する。
