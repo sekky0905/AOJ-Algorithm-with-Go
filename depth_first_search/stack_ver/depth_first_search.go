@@ -3,14 +3,13 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"errors"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
 )
 
-const maxLength = 100
+const maxLength = 1000
 
 var (
 	// adjacentMatrix は、隣接行列を表す。
@@ -18,6 +17,8 @@ var (
 	// timeCounter は全体の時刻を表す。
 	timeCounter int
 	n           int
+	nodes       []node
+	stack       *Stack
 )
 
 type color string
@@ -36,35 +37,43 @@ type node struct {
 	completedTime int
 }
 
-var nodes []node
-
-type simpleStack []int
-
-func (s simpleStack) push(v int) {
-	_ = append(s, v)
+// Stack は、スタック構造を表す。
+type Stack struct {
+	top  int // top は、最後の要素が格納されている場所を表す。
+	list [maxLength]int
 }
 
-func (s simpleStack) pop() (int, error) {
-	length := len(s)
-	if length < 1 {
-		return -1, errors.New("index out of range")
-	}
-	stack[len(stack)-1] = 0
+// Push は、スタックのトップに引数で与えられた数字を追加する。
+func (s *Stack) Push(el int) {
+	s.top++
+	s.list[s.top] = el
 }
 
-func (s simpleStack) top() (int, error) {
-	length := len(s)
-	if length < 1 {
-		return -1, errors.New("index out of range")
-	}
-	return s[length-1], nil
+// Pop は、スタックのトップの数字を返す。
+func (s *Stack) Pop() int {
+	s.top--
+	return s.list[s.top+1]
 }
 
-var stack simpleStack
+// IsEmpty は、スタックが空かどうかを確認する。
+func (s *Stack) IsEmpty() bool {
+	// トップが0ならば、何も入っていないため
+	return s.top == 0
+}
+
+// IsFull は、スタックが満杯かどうかを確認する。
+func (s *Stack) IsFull() bool {
+	return s.top >= maxLength-1
+}
+
+// Top は、スタックの一番上を返す。
+func (s *Stack) Top() int {
+	return s.list[s.top]
+}
 
 // deepFirstSearch は深さ優先探索を行う。
 func deepFirstSearch() error {
-	nodes = make([]node, n, n)
+	nodes = make([]node, maxLength, maxLength)
 	for i := range nodes {
 		nodes[i].color = white
 	}
@@ -79,28 +88,19 @@ func deepFirstSearch() error {
 	return nil
 }
 
-func print() {
-	var buf bytes.Buffer
-	for i := 0; i < n; i++ {
-		buf.WriteString(fmt.Sprintf("%d %d %d\n", i+1, nodes[i].foundTime, nodes[i].completedTime))
-	}
-	fmt.Print(buf.String())
-}
-
 // deepFirstSearchVisit は、深さ優先探索で訪問する。
-func deepFirstSearchVisit(u int) error {
-	stack.push(u) // 訪問する頂点uをスタックに追加
+func deepFirstSearchVisit(r int) error {
+	if !stack.IsFull() {
+		stack.Push(r) // 訪問する頂点uをスタックに追加
+	}
 
 	// 頂点uを訪問する
 	timeCounter++
-	nodes[u].color = gray // 訪問したのでuのcolorをgray(訪問済みにする)
-	nodes[u].foundTime = timeCounter
+	nodes[r].color = gray // 訪問したのでuのcolorをgray(訪問済みにする)
+	nodes[r].foundTime = timeCounter
 
-	for len(stack) != 0 {
-		u, err := stack.pop()
-		if err != nil {
-			return err
-		}
+	for stack.top != 0 {
+		u := stack.Top()
 
 		// 隣接頂点を取得する
 		v := getNextNode(u)
@@ -108,14 +108,18 @@ func deepFirstSearchVisit(u int) error {
 			if nodes[v].color == white { // 番号順に取得した頂点を訪問する
 				timeCounter++
 				nodes[v].color = gray
-				nodes[v].foundTime++
-				stack.push(v) // 頂点がvに移動したので、stackに追加
+				nodes[v].foundTime = timeCounter
+				if !stack.IsFull() {
+					stack.Push(v) // 頂点がvに移動したので、stackに追加
+				}
 			}
 		} else { // 隣接頂点が見つからなかったら
-			stack.pop()
+			if !stack.IsEmpty() {
+				stack.Pop()
+			}
 			timeCounter++
 			nodes[u].color = black // 隣接頂点が見つからなかったということは、今回の頂点の探索は完了したということ
-			nodes[v].completedTime++
+			nodes[u].completedTime = timeCounter
 		}
 	}
 	return nil
@@ -130,6 +134,14 @@ func getNextNode(u int) int {
 		}
 	}
 	return -1
+}
+
+func print() {
+	var buf bytes.Buffer
+	for i := 0; i < n; i++ {
+		buf.WriteString(fmt.Sprintf("%d %d %d\n", i+1, nodes[i].foundTime, nodes[i].completedTime))
+	}
+	fmt.Print(buf.String())
 }
 
 var sc = bufio.NewScanner(os.Stdin)
@@ -156,9 +168,18 @@ func initAdjacentMatrix() {
 	}
 }
 
+func initStack() {
+	var list [maxLength]int
+	stack = &Stack{
+		top:  0,
+		list: list,
+	}
+}
+
 func main() {
 	n = scanToInt()
 	initAdjacentMatrix()
+	initStack()
 
 	for i := 0; i < n; i++ {
 		str := scanToText()
@@ -179,7 +200,7 @@ func main() {
 		}
 	}
 	if err := deepFirstSearch(); err != nil {
-		panic(err)
+		fmt.Println(err.Error())
 	}
 	print()
 }
