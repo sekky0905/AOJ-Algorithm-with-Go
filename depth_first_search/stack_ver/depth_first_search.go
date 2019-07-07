@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
+	"os"
+	"strconv"
 )
 
 const maxLength = 100
@@ -126,6 +129,17 @@ func getNextNode(u int) int {
 		}
 	}
 	return -1
+}
+
+var sc = bufio.NewScanner(os.Stdin)
+
+func scanToInt() int {
+	sc.Scan()
+	n, err := strconv.Atoi(sc.Text())
+	if err != nil {
+		panic(err)
+	}
+	return n
 }
 
 func main() {
