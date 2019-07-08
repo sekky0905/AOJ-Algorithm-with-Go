@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 )
 
 type color string
@@ -21,7 +22,6 @@ const (
 
 // node は、頂点を表す。
 type node struct {
-	value int
 	color
 	distance int
 }
@@ -97,7 +97,7 @@ func initQueue() *Queue {
 
 // breadthFirstSearch は、幅優先探索を行う。
 func breadthFirstSearch(s int) error {
-	nodes := make([]node, n, n)
+	nodes = make([]node, n, n)
 	for i := range nodes {
 		nodes[i].color = white
 		nodes[i].distance = infinity
@@ -110,7 +110,9 @@ func breadthFirstSearch(s int) error {
 	// 始点との距離は0(自分自身なので)
 	nodes[s].distance = 0
 
-	q.EnQueue(s)
+	if err := q.EnQueue(s); err != nil {
+		return err
+	}
 
 	for !q.IsEmpty() {
 		u, err := q.DeQueue()
@@ -131,15 +133,23 @@ func breadthFirstSearch(s int) error {
 				return err
 			}
 		}
+		nodes[u].color = black
 	}
 	return nil
 }
 
 func print() {
 	var buf bytes.Buffer
-	for _, v := range nodes {
-		buf.WriteString(fmt.Sprintf("%d %d\n", v.value, v.distance))
+	for i, v := range nodes {
+		value := i + 1 // 1から始まるので
+		if v.distance == infinity {
+			buf.WriteString(fmt.Sprintf("%d -1\n", value))
+		} else {
+			buf.WriteString(fmt.Sprintf("%d %d\n", value, v.distance))
+		}
+
 	}
+	fmt.Print(buf.String())
 }
 
 var sc = bufio.NewScanner(os.Stdin)
@@ -156,4 +166,41 @@ func scanToInt() int {
 func scanToText() string {
 	sc.Scan()
 	return sc.Text()
+}
+
+// initAdjacentMatrix は、adjacentMatrixを初期化する。
+func initAdjacentMatrix() {
+	adjacentMatrix = make([][]bool, n, n)
+	for i := range adjacentMatrix {
+		adjacentMatrix[i] = make([]bool, n)
+	}
+}
+
+func main() {
+	n = scanToInt()
+	initAdjacentMatrix()
+
+	for i := 0; i < n; i++ {
+		str := scanToText()
+		s := strings.Split(str, " ")
+
+		u, err := strconv.Atoi(s[0])
+		if err != nil {
+			panic(err)
+		}
+
+		for _, vStr := range s[2:] {
+			v, err := strconv.Atoi(vStr)
+			if err != nil {
+				panic(err)
+			}
+			adjacentMatrix[u-1][v-1] = true //indexの分引く
+		}
+	}
+
+	if err := breadthFirstSearch(0); err != nil {
+		fmt.Println(err)
+	}
+
+	print()
 }
