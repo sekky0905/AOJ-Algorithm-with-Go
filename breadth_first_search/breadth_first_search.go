@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
+	"os"
+	"strconv"
 )
 
 type color string
@@ -137,4 +140,15 @@ func print() {
 	for _, v := range nodes {
 		buf.WriteString(fmt.Sprintf("%d %d\n", v.value, v.distance))
 	}
+}
+
+var sc = bufio.NewScanner(os.Stdin)
+
+func scanToInt() int {
+	sc.Scan()
+	n, err := strconv.Atoi(sc.Text())
+	if err != nil {
+		panic(err)
+	}
+	return n
 }
