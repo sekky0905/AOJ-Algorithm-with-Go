@@ -1,6 +1,10 @@
 package main
 
-import "errors"
+import (
+	"bytes"
+	"errors"
+	"fmt"
+)
 
 type color string
 
@@ -126,4 +130,11 @@ func breadthFirstSearch(s int) error {
 		}
 	}
 	return nil
+}
+
+func print() {
+	var buf bytes.Buffer
+	for _, v := range nodes {
+		buf.WriteString(fmt.Sprintf("%d %d\n", v.value, v.distance))
+	}
 }
