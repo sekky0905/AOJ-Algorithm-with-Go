@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"container/list"
 	"errors"
+	"os"
+	"strconv"
 )
 
 var (
@@ -58,4 +61,15 @@ func assignColor() error {
 		}
 	}
 	return nil
+}
+
+var sc = bufio.NewScanner(os.Stdin)
+
+func scanToInt() int {
+	sc.Scan()
+	n, err := strconv.Atoi(sc.Text())
+	if err != nil {
+		panic(err)
+	}
+	return n
 }
