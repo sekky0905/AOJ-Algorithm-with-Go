@@ -19,8 +19,8 @@ const (
 	empty = -1
 )
 
-// deepFirstSearch は、深さ優先探索を行う。
-func deepFirstSearch(r, c int) error {
+// depthFirstSearch は、深さ優先探索を行う。
+func depthFirstSearch(r, c int) error {
 	// container/listをstack的な用途で使用する
 	stackMock := list.New()
 	stackMock.PushFront(r)
@@ -54,7 +54,7 @@ func assignColor() error {
 	for u := 0; u < n; u++ {
 		if color[u] == empty {
 			id++
-			if err := deepFirstSearch(u, id); err != nil {
+			if err := depthFirstSearch(u, id); err != nil {
 				return err
 			}
 		}
