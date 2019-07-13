@@ -41,3 +41,21 @@ func deepFirstSearch(r, c int) error {
 	}
 	return nil
 }
+
+func assignColor() error {
+	id := 1
+	// 初期化
+	for i := 0; i < n; i++ {
+		color[i] = empty
+	}
+
+	for u := 0; u < n; u++ {
+		if color[u] == empty {
+			id++
+			if err := deepFirstSearch(u, id); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
