@@ -28,12 +28,10 @@ func deepFirstSearch(r, c int) error {
 
 	for stackMock.Len() != 0 {
 		// stackの一番上の値を取り出す(最後に格納された奴)
-		front := stackMock.Front()
-		u, ok := front.Value.(int)
+		u, ok := stackMock.Remove(stackMock.Front()).(int)
 		if !ok {
 			return errors.New("failed to type assertion")
 		}
-		stackMock.Remove(front)
 
 		for i := 0; i < len(graph[u]); i++ {
 			v := graph[u][i]
@@ -85,7 +83,7 @@ func print(s, t int) {
 
 func main() {
 	sc.Split(bufio.ScanWords)
-	n := scanToInt()
+	n = scanToInt()
 	graph = make([][]int, n, n)
 	color = make([]int, n, n)
 
