@@ -73,3 +73,8 @@ func scanToInt() int {
 	}
 	return n
 }
+
+func scanToText() string {
+	sc.Scan()
+	return sc.Text()
+}
