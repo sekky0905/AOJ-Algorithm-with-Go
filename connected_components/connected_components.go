@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"container/list"
 	"errors"
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -74,7 +75,36 @@ func scanToInt() int {
 	return n
 }
 
-func scanToText() string {
-	sc.Scan()
-	return sc.Text()
+func print(s, t int) {
+	if color[s] == color[t] {
+		fmt.Println("yes")
+		return
+	}
+	fmt.Println("no")
+}
+
+func main() {
+	sc.Split(bufio.ScanWords)
+	n := scanToInt()
+	graph = make([][]int, n, n)
+	color = make([]int, n, n)
+
+	m := scanToInt()
+
+	for i := 0; i < m; i++ {
+		s, t := scanToInt(), scanToInt()
+		// 友達同士お互いの関係をgraph内のお互いの場所に記録する
+		graph[s] = append(graph[s], t)
+		graph[t] = append(graph[t], s)
+	}
+
+	if err := assignColor(); err != nil {
+		panic(err)
+	}
+
+	q := scanToInt()
+	for i := 0; i < q; i++ {
+		s, t := scanToInt(), scanToInt()
+		print(s, t)
+	}
 }
