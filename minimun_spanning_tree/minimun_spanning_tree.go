@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"math"
 	"os"
 	"strconv"
@@ -17,8 +18,7 @@ const (
 	gray color = "VisitingNow"
 	// black は、訪問済みを表す。
 	black color = "AfterVisit"
-	// root は、primで訪問する一番最初の点を表す。
-	root = -1
+	empty       = -1
 )
 
 type (
@@ -52,6 +52,7 @@ func initMinimumSpanningTree() {
 	for i := range minimumSpanningTree {
 		minimumSpanningTree[i].color = white
 		minimumSpanningTree[i].minimumWeight = maxCost
+		minimumSpanningTree[i].parent = empty
 	}
 }
 
@@ -62,12 +63,11 @@ func prim() int16 {
 
 	// 始点となる頂点の設定を行う。
 	minimumSpanningTree[0].minimumWeight = 0
-	minimumSpanningTree[0].parent = root
 
 	var sum int16 = 0
 
 	for {
-		var u int16 = root
+		var u int16 = empty
 		minCost := maxCost
 		for i := 0; i < n; i++ {
 			// 訪問完了前かつ現時点での最小コストよりコストが小さい場合
@@ -77,8 +77,8 @@ func prim() int16 {
 			}
 		}
 
-		// minCostがmaxCostのままということはどこも訪問していない、つまり、この頂点以下に結ばれている頂点がないことになるので、loopを終了
-		if minCost == maxCost {
+		// uが-1のままということはどこも訪問していない、つまり、この頂点以下に結ばれている頂点がないことになるので、loopを終了
+		if u == empty {
 			break
 		}
 
@@ -96,14 +96,22 @@ func prim() int16 {
 			}
 		}
 
+		sum = 0
 		for i := 0; i < n; i++ {
-			if minimumSpanningTree[i].parent != root {
+			if minimumSpanningTree[i].parent != empty {
 				parent := minimumSpanningTree[i].parent
 				sum += adjacentMatrix[i][parent]
 			}
 		}
 	}
 	return sum
+}
+
+func initAdjacentMatrix() {
+	adjacentMatrix = make([][]int16, n, n)
+	for i := range adjacentMatrix {
+		adjacentMatrix[i] = make([]int16, n)
+	}
 }
 
 var sc = bufio.NewScanner(os.Stdin)
@@ -115,4 +123,27 @@ func scanToInt() int {
 		panic(err)
 	}
 	return n
+}
+
+func main() {
+	const empty = -1
+
+	sc.Split(bufio.ScanWords)
+
+	n = scanToInt()
+
+	initAdjacentMatrix()
+
+	for i := 0; i < n; i++ {
+		for j := 0; j < n; j++ {
+			weight := scanToInt()
+			if weight == empty {
+				adjacentMatrix[i][j] = maxCost
+			} else {
+				adjacentMatrix[i][j] = int16(weight)
+			}
+		}
+	}
+	sum := prim()
+	fmt.Println(sum)
 }
