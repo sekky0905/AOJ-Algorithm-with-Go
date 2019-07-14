@@ -1,6 +1,11 @@
 package main
 
-import "math"
+import (
+	"bufio"
+	"math"
+	"os"
+	"strconv"
+)
 
 const (
 	// maxCost は、頂点→頂点の移動の最大のコストを表す。
@@ -99,4 +104,15 @@ func prim() int16 {
 		}
 	}
 	return sum
+}
+
+var sc = bufio.NewScanner(os.Stdin)
+
+func scanToInt() int {
+	sc.Scan()
+	n, err := strconv.Atoi(sc.Text())
+	if err != nil {
+		panic(err)
+	}
+	return n
 }
