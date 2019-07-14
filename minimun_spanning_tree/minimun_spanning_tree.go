@@ -3,8 +3,8 @@ package main
 import "math"
 
 const (
-	// minCost は、頂点→頂点の移動の最小コストを表す。
-	minCost int16 = math.MaxInt16
+	// maxCost は、頂点→頂点の移動の最大のコストを表す。
+	maxCost int16 = math.MaxInt16
 	// 訪問ステータス
 	// white は、訪問前を表す。
 	white color = "BeforeVisit"
@@ -26,6 +26,18 @@ type (
 )
 
 var (
+	// n は、頂点の個数を表す。
+	n int
 	// minimumSpanningTree は、最小全域木を表す。
 	minimumSpanningTree []node
 )
+
+// initMinimumSpanningTree は、minimumSpanningTreeを初期化する。
+func initMinimumSpanningTree() {
+	minimumSpanningTree = make([]node, n, n)
+
+	for i := range minimumSpanningTree {
+		minimumSpanningTree[i].color = white
+		minimumSpanningTree[i].minimumWeight = maxCost
+	}
+}
