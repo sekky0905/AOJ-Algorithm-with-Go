@@ -6,34 +6,6 @@ import (
 	"strconv"
 )
 
-func main() {
-	// targetを取得する
-	target, length := getTarget()
-
-	targetCards := make([]*card, length, length)
-
-	for i, v := range target {
-		c := newCard(v)
-		targetCards[i] = c
-	}
-
-	// 単純に代入するだけだと参照渡しになってしまうため、copy
-	targetCards2 := make([]*card, length, length)
-	copy(targetCards2, targetCards)
-
-	// BubbleSort
-	bSorted := BubbleSort(targetCards, length)
-	printSlice(bSorted, length)
-	//printIsStable(isStableCalculatedBySlowAlgorithm(targetCards, bSorted))
-	printIsStable(isStableCalculatedByFastAlgorithm(targetCards, bSorted))
-
-	// SelectionSort
-	sSorted := SelectionSort(targetCards2, length)
-	printSlice(sSorted, length)
-	//printIsStable(isStableCalculatedBySlowAlgorithm(targetCards, sSorted))
-	printIsStable(isStableCalculatedByFastAlgorithm(targetCards2, bSorted))
-}
-
 // card は、カードを表す
 type card struct {
 	rowVal   string
@@ -153,4 +125,32 @@ func printSlice(target []*card, length int) {
 
 	formatted := fmt.Sprint(rows)
 	fmt.Println(formatted[1 : len(formatted)-1])
+}
+
+func main() {
+	// targetを取得する
+	target, length := getTarget()
+
+	targetCards := make([]*card, length, length)
+
+	for i, v := range target {
+		c := newCard(v)
+		targetCards[i] = c
+	}
+
+	// 単純に代入するだけだと参照渡しになってしまうため、copy
+	targetCards2 := make([]*card, length, length)
+	copy(targetCards2, targetCards)
+
+	// BubbleSort
+	bSorted := BubbleSort(targetCards, length)
+	printSlice(bSorted, length)
+	//printIsStable(isStableCalculatedBySlowAlgorithm(targetCards, bSorted))
+	printIsStable(isStableCalculatedByFastAlgorithm(targetCards, bSorted))
+
+	// SelectionSort
+	sSorted := SelectionSort(targetCards2, length)
+	printSlice(sSorted, length)
+	//printIsStable(isStableCalculatedBySlowAlgorithm(targetCards, sSorted))
+	printIsStable(isStableCalculatedByFastAlgorithm(targetCards2, bSorted))
 }

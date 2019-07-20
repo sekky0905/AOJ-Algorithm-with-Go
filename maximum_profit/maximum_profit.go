@@ -8,10 +8,6 @@ import (
 	"strconv"
 )
 
-func main() {
-	MaximumProfit()
-}
-
 // getTarget は、ターゲットとなるintを返す
 func getTarget(sc *bufio.Scanner) int {
 	sc.Scan()
@@ -55,4 +51,8 @@ func MaximumProfit() {
 	}
 
 	fmt.Println(maxV)
+}
+
+func main() {
+	MaximumProfit()
 }
