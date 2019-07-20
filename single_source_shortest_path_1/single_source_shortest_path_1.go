@@ -79,6 +79,14 @@ func initNodes() {
 	}
 }
 
+// initAdjacentMatrix は、adjacentMatrixを初期化する。
+func initAdjacentMatrix() {
+	adjacentMatrix = make([][]int, n, n)
+	for i := range adjacentMatrix {
+		adjacentMatrix[i] = make([]int, n)
+	}
+}
+
 func print() {
 	for i, v := range nodes {
 		fmt.Printf("%d %d", i, v.distance)
@@ -100,6 +108,7 @@ func main() {
 	sc.Split(bufio.ScanWords)
 
 	n = scanToInt()
+	initAdjacentMatrix()
 
 	for i := 0; i < n; i++ {
 		// 頂点の番号
