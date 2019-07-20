@@ -15,6 +15,25 @@ type element struct {
 	priority int
 }
 
+// priorityQueue は、priority queueを表す。
+type priorityQueue []*element
+
+// push は、priority queueにelementを追加する。
+func (pq *priorityQueue) push(elm *element) {
+	n := len(*pq)
+	elm.key = n
+	*pq = append(*pq, elm)
+}
+
+// pop は、priority queueから次のelementを削除する。
+func (pq *priorityQueue) pop() *element {
+	old := *pq
+	n := len(old)
+	elm := old[n-1]
+	*pq = old[0 : n-1]
+	return elm
+}
+
 var (
 	// adjacentMatrix は、隣接行列を表す。
 	adjacentMatrix [][]int
