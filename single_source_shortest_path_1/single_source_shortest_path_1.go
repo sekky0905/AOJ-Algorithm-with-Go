@@ -1,5 +1,11 @@
 package main
 
+import (
+	"bufio"
+	"os"
+	"strconv"
+)
+
 type color string
 
 const (
@@ -70,6 +76,17 @@ func initNodes() {
 		nodes[i].color = white
 		nodes[i].distance = infinity
 	}
+}
+
+var sc = bufio.NewScanner(os.Stdin)
+
+func scanToInt() int {
+	sc.Scan()
+	n, err := strconv.Atoi(sc.Text())
+	if err != nil {
+		panic(err)
+	}
+	return n
 }
 
 func main() {
