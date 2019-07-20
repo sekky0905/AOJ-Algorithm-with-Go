@@ -12,6 +12,7 @@ const (
 var (
 	// adjacentMatrix は、隣接行列を表す。
 	adjacentMatrix [][]int
+	nodes          []node
 	n              int
 )
 
@@ -38,4 +39,10 @@ func (pq *priorityQueue) pop() *element {
 	elm := old[n-1]
 	*pq = old[0 : n-1]
 	return elm
+}
+
+// node は、頂点を表す。
+type node struct {
+	distance int // 最短コストを表す。
+	color        // 訪問状態を表す。
 }
