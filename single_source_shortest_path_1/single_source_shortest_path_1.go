@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"os"
 	"strconv"
@@ -10,11 +11,10 @@ import (
 type color string
 
 const (
-	white     color = "WHITE" // 訪問前のを表す
-	gray      color = "GRAY"  // 訪問したことを表す
-	black     color = "BLACK" // 完了を表す
-	maxLength       = 100
-	infinity        = -99
+	white    color = "WHITE" // 訪問前のを表す
+	gray     color = "GRAY"  // 訪問したことを表す
+	black    color = "BLACK" // 完了を表す
+	infinity       = 1000000000
 )
 
 // node は、頂点を表す。
@@ -39,9 +39,10 @@ func dijkstra() {
 	nodes[0].distance = 0 // 最小コストは0
 	nodes[0].parent = -1  // 始点のためparentは存在しない
 
+	// 最小コストを記録する
+	var minCost int
 	for {
-		// 最小コストを記録する
-		minCost := infinity
+		minCost = infinity
 		var u int
 
 		for i := 0; i < n; i++ {
@@ -72,7 +73,7 @@ func dijkstra() {
 
 // initNodes は、nodesを初期化する。
 func initNodes() {
-	nodes := make([]node, n, n)
+	nodes = make([]node, n, n)
 	for i := range nodes {
 		nodes[i].color = white
 		nodes[i].distance = infinity
@@ -84,13 +85,19 @@ func initAdjacentMatrix() {
 	adjacentMatrix = make([][]int, n, n)
 	for i := range adjacentMatrix {
 		adjacentMatrix[i] = make([]int, n)
+		for j := 0; j < n; j++ {
+			adjacentMatrix[i][j] = infinity
+		}
+
 	}
 }
 
 func print() {
+	var buf bytes.Buffer
 	for i, v := range nodes {
-		fmt.Printf("%d %d", i, v.distance)
+		buf.WriteString(fmt.Sprintf("%d %d\n", i, v.distance))
 	}
+	fmt.Print(buf.String())
 }
 
 var sc = bufio.NewScanner(os.Stdin)
