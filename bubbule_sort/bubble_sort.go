@@ -2,15 +2,6 @@ package main
 
 import "fmt"
 
-func main() {
-	numSlice, length := getTarget()
-	sortedSlice, count := BubbleSort(numSlice, length)
-	// オペランドの間にスペースを挿入する
-	formatted := fmt.Sprint(sortedSlice)
-	fmt.Println(formatted[1 : len(formatted)-1])
-	fmt.Println(count)
-}
-
 // getTarget は、ターゲットとなるintのSliceとその長さ返す
 func getTarget() (target []int, length int) {
 	fmt.Scan(&length)
@@ -42,4 +33,13 @@ func BubbleSort(numSlice []int, length int) ([]int, int) {
 		}
 	}
 	return numSlice, count
+}
+
+func main() {
+	numSlice, length := getTarget()
+	sortedSlice, count := BubbleSort(numSlice, length)
+	// オペランドの間にスペースを挿入する
+	formatted := fmt.Sprint(sortedSlice)
+	fmt.Println(formatted[1 : len(formatted)-1])
+	fmt.Println(count)
 }
