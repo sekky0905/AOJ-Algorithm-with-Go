@@ -9,6 +9,12 @@ const (
 	infinity       = 1000000000
 )
 
+var (
+	// adjacentMatrix は、隣接行列を表す。
+	adjacentMatrix [][]int
+	n              int
+)
+
 // element は、priority queueの要素を表す。
 type element struct {
 	key      int
@@ -33,9 +39,3 @@ func (pq *priorityQueue) pop() *element {
 	*pq = old[0 : n-1]
 	return elm
 }
-
-var (
-	// adjacentMatrix は、隣接行列を表す。
-	adjacentMatrix [][]int
-	n              int
-)
