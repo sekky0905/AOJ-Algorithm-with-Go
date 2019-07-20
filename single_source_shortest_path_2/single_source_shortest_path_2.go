@@ -50,3 +50,12 @@ type node struct {
 	distance int // 最短コストを表す。
 	color        // 訪問状態を表す。
 }
+
+// initNodes は、nodesを初期化する。
+func initNodes() {
+	nodes = make([]node, n, n)
+	for i := range nodes {
+		nodes[i].color = white
+		nodes[i].distance = infinity
+	}
+}
