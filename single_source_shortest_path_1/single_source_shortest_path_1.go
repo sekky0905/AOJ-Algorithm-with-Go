@@ -19,10 +19,49 @@ type node struct {
 
 var (
 	// adjacentMatrix は、隣接行列を表す。
-	adjacentMatrix [][]bool
+	adjacentMatrix [][]int
 	nodes          []node
 	n              int
 )
+
+// dijkstra は、ダイクストラのアルゴリズムを表す。
+func dijkstra(s int) {
+	initNodes()
+
+	// 始点sの設定を行う
+	nodes[s].distance = 0 // 最小コストは0
+	nodes[s].parent = -1  // 始点のためparentは存在しない
+
+	for {
+		// 最小コストを記録する
+		minCost := infinity
+		var u int
+
+		for i := 0; i < n; i++ {
+			if nodes[i].color != black && nodes[i].distance < minCost { // 訪問済みではない && ここまで記録してきた最小コストよりも小さい場合
+				minCost = nodes[i].distance
+				u = i
+			}
+		}
+
+		// 最小コストの記録が変更されていないということは、訪問先がなかったということなので終了
+		if minCost == infinity {
+			break
+		}
+
+		nodes[u].color = black
+
+		for v := 0; v < n; v++ {
+			if nodes[v].color != black && adjacentMatrix[u][v] != infinity { // 訪問済みではない && uとvに辺が存在する
+				if nodes[u].distance+adjacentMatrix[u][v] < nodes[v].distance { // uの最小コスト+uとvの辺の重さがvの最小コストよりも小さい場合
+					nodes[v].distance = nodes[u].distance + adjacentMatrix[u][v] // vの最小コストを入れ替え
+					nodes[v].parent = u                                          // u → v ということになるので、vのparentをuにする
+					nodes[v].color = gray                                        // vに訪問中
+				}
+			}
+		}
+	}
+}
 
 // initNodes は、nodesを初期化する。
 func initNodes() {
