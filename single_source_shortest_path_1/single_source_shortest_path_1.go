@@ -12,7 +12,6 @@ const (
 
 // node は、頂点を表す。
 type node struct {
-	key      int // 頂点のkeyを表す。
 	distance int // 最短コストを表す。
 	parent   int // 親のkeyを表す。
 	color        // 訪問状態を表す。
@@ -24,6 +23,15 @@ var (
 	nodes          []node
 	n              int
 )
+
+// initNodes は、nodesを初期化する。
+func initNodes() {
+	nodes := make([]node, n, n)
+	for i := range nodes {
+		nodes[i].color = white
+		nodes[i].distance = infinity
+	}
+}
 
 func main() {
 
