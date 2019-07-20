@@ -31,12 +31,12 @@ var (
 )
 
 // dijkstra は、ダイクストラのアルゴリズムを表す。
-func dijkstra(s int) {
+func dijkstra() {
 	initNodes()
 
 	// 始点sの設定を行う
-	nodes[s].distance = 0 // 最小コストは0
-	nodes[s].parent = -1  // 始点のためparentは存在しない
+	nodes[0].distance = 0 // 最小コストは0
+	nodes[0].parent = -1  // 始点のためparentは存在しない
 
 	for {
 		// 最小コストを記録する
@@ -89,11 +89,23 @@ func scanToInt() int {
 	return n
 }
 
-func scanToText() string {
-	sc.Scan()
-	return sc.Text()
-}
-
 func main() {
+	sc.Split(bufio.ScanWords)
 
+	n = scanToInt()
+
+	for i := 0; i < n; i++ {
+		// 頂点の番号
+		u := scanToInt()
+		// uの出次数
+		k := scanToInt()
+
+		for i := 0; i < k; i++ {
+			// v = uに隣接する頂点の番号, u - v 間の有向辺の重み
+			v, c := scanToInt(), scanToInt()
+			adjacentMatrix[u][v] = c
+		}
+	}
+
+	dijkstra()
 }
