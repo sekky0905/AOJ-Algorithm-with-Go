@@ -19,7 +19,7 @@ const (
 
 var (
 	// adjacentMatrix は、隣接リストを表す。
-	adjacentMatrix [][]node
+	adjacentMatrix map[int][]node
 	edges          []edge
 	n              int
 )
@@ -56,7 +56,7 @@ func (pq *priorityQueue) pop() *element {
 }
 
 func newPriorityQueue() priorityQueue {
-	return make(priorityQueue, n)
+	return priorityQueue{}
 }
 
 // edge は、頂点を表す。
@@ -72,6 +72,10 @@ func initEdges() {
 		edges[i].color = white
 		edges[i].distance = infinity
 	}
+}
+
+func initAdjacentMatrix() {
+	adjacentMatrix = make(map[int][]node, n)
 }
 
 // dijkstra は、ダイクストラのアルゴリズムを表す。
@@ -134,4 +138,30 @@ func scanToInt() int {
 		panic(err)
 	}
 	return n
+}
+
+func main() {
+	sc.Split(bufio.ScanWords)
+
+	n = scanToInt()
+	initAdjacentMatrix()
+
+	for i := 0; i < n; i++ {
+		// 頂点の番号
+		u := scanToInt()
+		// uの出次数
+		k := scanToInt()
+
+		for i := 0; i < k; i++ {
+			// v = uに隣接する頂点の番号, u - v 間の有向辺の重み
+			v, c := scanToInt(), scanToInt()
+			adjacentMatrix[u] = append(adjacentMatrix[u], node{
+				key:    v,
+				weight: c,
+			})
+		}
+	}
+
+	dijkstra()
+	print()
 }
