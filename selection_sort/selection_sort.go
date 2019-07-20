@@ -2,17 +2,6 @@ package main
 
 import "fmt"
 
-func main() {
-	// targetを取得する
-	target, length := getTarget()
-	// ソートする
-	sortedSlice, count := SelectionSort(target, length)
-
-	formatted := fmt.Sprint(sortedSlice)
-	fmt.Println(formatted[1 : len(formatted)-1])
-	fmt.Println(count)
-}
-
 // getTarget は、ターゲットとなるintのSliceを返す
 func getTarget() (target []int, length int) {
 	fmt.Scan(&length)
@@ -52,4 +41,15 @@ func SelectionSort(target []int, length int) ([]int, int) {
 	}
 
 	return target, counter
+}
+
+func main() {
+	// targetを取得する
+	target, length := getTarget()
+	// ソートする
+	sortedSlice, count := SelectionSort(target, length)
+
+	formatted := fmt.Sprint(sortedSlice)
+	fmt.Println(formatted[1 : len(formatted)-1])
+	fmt.Println(count)
 }
