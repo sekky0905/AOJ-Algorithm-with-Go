@@ -41,6 +41,10 @@ func (pq *priorityQueue) pop() *element {
 	return elm
 }
 
+func newPriorityQueue() priorityQueue {
+	return make(priorityQueue, n)
+}
+
 // node は、頂点を表す。
 type node struct {
 	distance int // 最短コストを表す。
