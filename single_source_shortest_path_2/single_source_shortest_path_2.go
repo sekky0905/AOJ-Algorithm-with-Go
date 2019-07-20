@@ -2,6 +2,8 @@ package main
 
 import (
 	"bufio"
+	"bytes"
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -18,6 +20,7 @@ const (
 var (
 	// adjacentMatrix は、隣接リストを表す。
 	adjacentMatrix [][]node
+	edges          []edge
 	n              int
 )
 
@@ -63,19 +66,18 @@ type edge struct {
 }
 
 // initEdges は、edgesを初期化する。
-func initEdges() []edge {
-	nodes := make([]edge, n, n)
-	for i := range nodes {
-		nodes[i].color = white
-		nodes[i].distance = infinity
+func initEdges() {
+	edges = make([]edge, n, n)
+	for i := range edges {
+		edges[i].color = white
+		edges[i].distance = infinity
 	}
-	return nodes
 }
 
 // dijkstra は、ダイクストラのアルゴリズムを表す。
 func dijkstra() {
 	pq := newPriorityQueue()
-	edges := initEdges()
+	initEdges()
 
 	// 0(始点)に訪問する。
 	edges[0].distance = 0
@@ -113,6 +115,14 @@ func dijkstra() {
 			edges[v].color = gray
 		}
 	}
+}
+
+func print() {
+	var buf bytes.Buffer
+	for i, v := range edges {
+		buf.WriteString(fmt.Sprintf("%d %d\n", i, v.distance))
+	}
+	fmt.Print(buf.String())
 }
 
 var sc = bufio.NewScanner(os.Stdin)
