@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -78,6 +79,12 @@ func initNodes() {
 	}
 }
 
+func print() {
+	for i, v := range nodes {
+		fmt.Printf("%d %d", i, v.distance)
+	}
+}
+
 var sc = bufio.NewScanner(os.Stdin)
 
 func scanToInt() int {
@@ -108,4 +115,5 @@ func main() {
 	}
 
 	dijkstra()
+	print()
 }
