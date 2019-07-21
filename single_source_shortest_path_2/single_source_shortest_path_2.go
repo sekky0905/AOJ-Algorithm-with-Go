@@ -3,133 +3,99 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"container/heap"
 	"fmt"
 	"os"
 	"strconv"
 )
 
-type color string
-
-const (
-	white    color = "WHITE" // 訪問前のを表す
-	gray     color = "GRAY"  // 訪問したことを表す
-	black    color = "BLACK" // 完了を表す
-	infinity       = 1000000000
-)
+const infinity = 1000000000
 
 var (
-	// adjacentMatrix は、隣接リストを表す。
-	adjacentMatrix map[int][]node
-	edges          []edge
-	n              int
+	// distances は、最短経路の集合を表す。
+	distances []int
+	// adjacentList は、連接リストを表す。
+	adjacentList [][]node
 )
 
-// node は、頂点を表す。
-type node struct {
-	key    int
-	weight int
+type (
+	// element は、priorityQueueの要素を表す。
+	element struct {
+		key      int
+		distance int
+	}
+
+	// priorityQueue は、priority queueを表す。
+	priorityQueue []*element
+
+	// node は、頂点を表す。
+	node struct {
+		key    int
+		weight int
+	}
+)
+
+// Len は、priorityQueueの長さを返す。
+func (pq priorityQueue) Len() int { return len(pq) }
+
+// Less は、iがjの要素よりも小さいかどうかを返す。
+func (pq priorityQueue) Less(i, j int) bool {
+	return pq[i].distance < pq[j].distance
 }
 
-// element は、priority queueの要素を表す。
-type element struct {
-	key      int
-	priority int
+// Swap は、iとjの要素を交換する。
+func (pq priorityQueue) Swap(i, j int) {
+	pq[i], pq[j] = pq[j], pq[i]
 }
 
-// priorityQueue は、priority queueを表す。
-type priorityQueue []*element
-
-// push は、priority queueにelementを追加する。
-func (pq *priorityQueue) push(elm *element) {
-	n := len(*pq)
-	elm.key = n
+// Push は、priorityQueueに要素を格納する。
+func (pq *priorityQueue) Push(x interface{}) {
+	elm := x.(*element)
 	*pq = append(*pq, elm)
 }
 
-// pop は、priority queueから次のelementを削除する。
-func (pq *priorityQueue) pop() *element {
-	old := *pq
-	n := len(old)
-	elm := old[n-1]
-	*pq = old[0 : n-1]
+// Pop は、priorityQueueから要素を取り除く。
+func (pq *priorityQueue) Pop() interface{} {
+	n := len(*pq)
+	elm := (*pq)[n-1]
+	*pq = (*pq)[0 : n-1]
 	return elm
 }
 
-func newPriorityQueue() priorityQueue {
-	return priorityQueue{}
-}
-
-// edge は、頂点を表す。
-type edge struct {
-	distance int // 最短コストを表す。
-	color        // 訪問状態を表す。
-}
-
-// initEdges は、edgesを初期化する。
-func initEdges() {
-	edges = make([]edge, n, n)
-	for i := range edges {
-		edges[i].color = white
-		edges[i].distance = infinity
-	}
-}
-
-func initAdjacentMatrix() {
-	adjacentMatrix = make(map[int][]node, n)
-}
+var sc = bufio.NewScanner(os.Stdin)
 
 // dijkstra は、ダイクストラのアルゴリズムを表す。
-func dijkstra() {
-	pq := newPriorityQueue()
-	initEdges()
+func dijkstra(pq priorityQueue) {
+	distances[0] = 0
+	pq.Push(&element{0, 0})
 
-	// 0(始点)に訪問する。
-	edges[0].distance = 0
-	elm := &element{
-		key:      0,
-		priority: 0,
+	for i := 1; i < len(distances); i++ {
+		distances[i] = infinity
+		pq.Push(&element{i, distances[i]})
 	}
-	pq.push(elm)
-	edges[0].color = gray
 
-	for len(pq) != 0 {
-		f := pq.pop()
-		u := f.key
-		edges[u].color = black // 訪問したことにする
+	heap.Init(&pq)
 
-		// 現在の最小値を取り出して、それが最短でなければ今回はスキップする
-		if edges[u].distance < f.priority*-1 {
-			continue
-		}
-
-		for j := 0; j < len(adjacentMatrix[u]); j++ { // リスト[index]を回る
-			v := adjacentMatrix[u][j].key
-			if edges[v].color == black {
-				continue
+	for pq.Len() != 0 {
+		elm := heap.Pop(&pq).(*element)
+		u := elm.key
+		for i := 0; i < len(adjacentList[u]); i++ {
+			v := adjacentList[u][i].key
+			if elm.distance+adjacentList[u][i].weight < distances[v] {
+				distances[v] = elm.distance + adjacentList[u][i].weight
+				heap.Push(&pq, &element{v, distances[v]})
 			}
-
-			if edges[v].distance > edges[u].distance+adjacentMatrix[u][j].weight {
-				edges[v].distance = edges[u].distance + adjacentMatrix[u][j].weight
-			}
-
-			pq.push(&element{
-				key:      v,
-				priority: edges[v].distance * -1,
-			})
-			edges[v].color = gray
 		}
 	}
 }
 
 func print() {
 	var buf bytes.Buffer
-	for i, v := range edges {
-		buf.WriteString(fmt.Sprintf("%d %d\n", i, v.distance))
+	for i, v := range distances {
+		buf.WriteString(fmt.Sprintf("%d %d\n", i, v))
 	}
 	fmt.Print(buf.String())
 }
-
-var sc = bufio.NewScanner(os.Stdin)
 
 func scanToInt() int {
 	sc.Scan()
@@ -143,25 +109,22 @@ func scanToInt() int {
 func main() {
 	sc.Split(bufio.ScanWords)
 
-	n = scanToInt()
-	initAdjacentMatrix()
+	n := scanToInt()
+
+	adjacentList = make([][]node, n)
+	pq := make(priorityQueue, 0, n)
+	distances = make([]int, n)
 
 	for i := 0; i < n; i++ {
-		// 頂点の番号
 		u := scanToInt()
-		// uの出次数
 		k := scanToInt()
-
-		for i := 0; i < k; i++ {
-			// v = uに隣接する頂点の番号, u - v 間の有向辺の重み
-			v, c := scanToInt(), scanToInt()
-			adjacentMatrix[u] = append(adjacentMatrix[u], node{
-				key:    v,
-				weight: c,
-			})
+		adjacentList[u] = make([]node, k)
+		for j := 0; j < k; j++ {
+			adjacentList[u][j].key = scanToInt()
+			adjacentList[u][j].weight = scanToInt()
 		}
 	}
 
-	dijkstra()
+	dijkstra(pq)
 	print()
 }
