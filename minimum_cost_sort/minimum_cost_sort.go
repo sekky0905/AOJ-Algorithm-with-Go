@@ -1,6 +1,11 @@
 package main
 
-import "sort"
+import (
+	"bufio"
+	"os"
+	"sort"
+	"strconv"
+)
 
 func getSorted(n int, target []int) []int {
 	s := make([]int, n, n)
@@ -72,6 +77,17 @@ func min(a, b int) int {
 		return a
 	}
 	return b
+}
+
+var sc = bufio.NewScanner(os.Stdin)
+
+func scanToInt() int {
+	sc.Scan()
+	n, err := strconv.Atoi(sc.Text())
+	if err != nil {
+		panic(err)
+	}
+	return n
 }
 
 func main() {
