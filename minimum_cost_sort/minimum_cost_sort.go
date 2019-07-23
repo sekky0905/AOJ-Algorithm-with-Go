@@ -2,10 +2,13 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"sort"
 	"strconv"
 )
+
+const max = 100000
 
 func getSorted(n int, target []int) []int {
 	s := make([]int, n, n)
@@ -16,28 +19,26 @@ func getSorted(n int, target []int) []int {
 	return s
 }
 
-func getIndexReversed(n int, target []int) []int {
-	s := make([]int, n, n)
+func getIndexReversed(target []int) []int {
+	s := make([]int, max)
 	for i, v := range target {
 		s[v] = i
 	}
 	return s
 }
 
-func minimumCostSort(n, s int, target []int) int {
-	const max = 1 << 30
-
-	var res int
+func minimumCostSort(n, x int, target []int) int {
+	res := 0
 	// 数列を正しく昇順に並び替えたもの
 	sorted := getSorted(n, target)
 	// indexと実態が逆の数列
 	// 例)
 	// 通常 {4, 1, 2, 5, 3}
 	// これ {x, 1, 2, 4, 0, 3}
-	indexReverse := getIndexReversed(n, sorted)
-	//
+	indexReverse := getIndexReversed(sorted)
 	completed := make([]bool, n, n)
-	for i, v := range target {
+
+	for i := range target {
 		if completed[i] {
 			continue
 		}
@@ -47,29 +48,29 @@ func minimumCostSort(n, s int, target []int) int {
 
 		for {
 			completed[cursor] = true
+			ans++
 			v := target[cursor]
-			minV := min(minV, v)
+			minV = min(minV, v)
 			// 合計を今回の値分増やす
 			sum += v
 			cursor = indexReverse[v] // 値からindexを逆引き
 			if completed[cursor] {
 				break
 			}
-			res1 := calc1(sum, ans, minV)
-			res2 := calc2(sum, ans, minV, s)
-
-			res += min(res1, res2)
 		}
+		res1 := calc1(sum, ans, minV)
+		res2 := calc2(sum, ans, minV, x)
+		res += min(res1, res2)
 	}
 	return res
 }
 
-func calc1(sum, ans, min int) int {
-	return sum + (ans-2)*min
+func calc1(sum, ans, minV int) int {
+	return sum + (ans-2)*minV
 }
 
-func calc2(sum, ans, min, s int) int {
-	return min + sum + (ans+1)*s
+func calc2(sum, ans, minV, x int) int {
+	return sum + minV + (ans+1)*x
 }
 
 func min(a, b int) int {
@@ -91,5 +92,16 @@ func scanToInt() int {
 }
 
 func main() {
+	sc.Split(bufio.ScanWords)
 
+	n := scanToInt()
+	target := make([]int, n, n)
+	x := max
+
+	for i := 0; i < n; i++ {
+		target[i] = scanToInt()
+		x = min(x, target[i])
+	}
+	res := minimumCostSort(n, x, target)
+	fmt.Println(res)
 }
