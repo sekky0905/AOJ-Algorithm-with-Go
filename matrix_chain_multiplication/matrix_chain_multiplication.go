@@ -2,13 +2,20 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"strconv"
 )
 
-func calcMatrixChainMultiplication(n int, p []int, m [][]int) [][]int {
-	for i := 1; i <= n; i++ {
-		m[i][i] = 0
+const max = 100
+
+func calcMatrixChainMultiplication(n int, p []int) [][]int {
+	m := make([][]int, max, max)
+	for i := range m {
+		m[i] = make([]int, max)
+		for j := 0; j < n; j++ {
+			m[i][j] = 0
+		}
 	}
 
 	for l := 2; l <= n; l++ {
@@ -44,4 +51,13 @@ func scanToInt() int {
 func main() {
 	sc.Split(bufio.ScanWords)
 
+	n := scanToInt()
+	p := make([]int, max, max)
+
+	for i := 1; i <= n; i++ {
+		p[i-1], p[i] = scanToInt(), scanToInt()
+	}
+
+	m := calcMatrixChainMultiplication(n, p)
+	fmt.Println(m[1][n])
 }
