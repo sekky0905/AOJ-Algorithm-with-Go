@@ -1,5 +1,11 @@
 package main
 
+import (
+	"bufio"
+	"os"
+	"strconv"
+)
+
 func calcMatrixChainMultiplication(n int, p []int, m [][]int) [][]int {
 	for i := 1; i <= n; i++ {
 		m[i][i] = 0
@@ -24,6 +30,18 @@ func min(a, b int) int {
 	return b
 }
 
+var sc = bufio.NewScanner(os.Stdin)
+
+func scanToInt() int {
+	sc.Scan()
+	n, err := strconv.Atoi(sc.Text())
+	if err != nil {
+		panic(err)
+	}
+	return n
+}
+
 func main() {
+	sc.Split(bufio.ScanWords)
 
 }
