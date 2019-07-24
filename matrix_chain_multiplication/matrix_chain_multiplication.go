@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-const max = 100
+const max = 1000
 
 func calcMatrixChainMultiplication(n int, p []int) [][]int {
 	m := make([][]int, max, max)
